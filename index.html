@@ -1,0 +1,1578 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Conversor MP4 para AVI em lote — v2.0</title>
+  <style>
+    :root {
+      --ink: #111820;
+      --accent: #285748;
+      --accent-dark: #183a31;
+      --gold: #c5a253;
+      --bg: #f4f2ec;
+      --card: #ffffff;
+      --line: #d8d3c8;
+      --text: #17202a;
+      --muted: #626b70;
+      --danger: #a93434;
+      --danger-bg: #fff3f2;
+      --success: #24764f;
+      --success-bg: #edf8f1;
+      --warning: #9a6715;
+      --warning-bg: #fff8e8;
+      --info: #2a5f91;
+      --info-bg: #eef6fd;
+      --shadow: 0 12px 30px rgba(17, 24, 32, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body { line-height: 1.45; }
+    button, input, select { font: inherit; }
+    button { touch-action: manipulation; }
+
+    .app-shell {
+      width: min(1480px, calc(100% - 24px));
+      margin: 18px auto 36px;
+    }
+
+    .masthead {
+      position: relative;
+      overflow: hidden;
+      padding: 24px clamp(20px, 4vw, 42px);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, .10);
+      border-bottom: 5px solid var(--gold);
+      border-radius: 16px 16px 10px 10px;
+      background: linear-gradient(118deg, var(--ink) 0%, var(--accent-dark) 66%, #285748 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .masthead::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -90px;
+      top: -120px;
+      border: 1px solid rgba(197, 162, 83, .26);
+      border-radius: 50%;
+      box-shadow: 0 0 0 36px rgba(197, 162, 83, .07), 0 0 0 72px rgba(197, 162, 83, .04);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: #e5cf94;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      line-height: 1.15;
+      letter-spacing: -.025em;
+    }
+
+    .masthead p:last-child {
+      max-width: 780px;
+      margin: 10px 0 0;
+      color: rgba(255,255,255,.82);
+    }
+
+    .privacy-strip {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 12px 0;
+      padding: 12px 15px;
+      border: 1px solid #b9d4c9;
+      border-radius: 10px;
+      background: #eef8f4;
+      color: #244a3e;
+      font-size: .92rem;
+    }
+
+    .privacy-strip svg { flex: 0 0 auto; margin-top: 1px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--card);
+      box-shadow: 0 6px 20px rgba(17, 24, 32, .055);
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .card-body { padding: 18px; }
+
+    .drop-zone {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 218px;
+      padding: 28px;
+      border: 2px dashed #94aea4;
+      border-radius: 13px;
+      background: linear-gradient(180deg, #fbfdfc, #f4f8f6);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .18s, background .18s, transform .18s;
+    }
+
+    .drop-zone:hover,
+    .drop-zone:focus-visible,
+    .drop-zone.is-dragging {
+      border-color: var(--accent);
+      background: #eef7f3;
+      outline: none;
+    }
+
+    .drop-zone.is-dragging { transform: scale(1.006); }
+    .drop-zone input { display: none; }
+
+    .upload-icon {
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 12px;
+      border-radius: 16px;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(40, 87, 72, .25);
+    }
+
+    .drop-title { margin: 0; font-size: 1.08rem; font-weight: 800; }
+    .drop-help { margin: 7px 0 0; color: var(--muted); font-size: .9rem; }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--text);
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .12s, box-shadow .12s, background .12s;
+    }
+
+    .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(17,24,32,.11); }
+    .btn:focus-visible { outline: 3px solid rgba(40,87,72,.25); outline-offset: 2px; }
+    .btn:disabled { opacity: .48; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-dark); }
+    .btn-secondary { border-color: #b8c8c2; background: #f7faf9; color: var(--accent-dark); }
+    .btn-danger { border-color: #e2bbbb; background: var(--danger-bg); color: var(--danger); }
+    .btn-ghost { border-color: var(--line); background: #fff; }
+    .btn-small { min-height: 32px; padding: 5px 9px; font-size: .79rem; }
+
+    .side-stack { display: grid; gap: 14px; }
+
+    .field { display: grid; gap: 6px; margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    .field label { font-size: .82rem; font-weight: 800; color: #36434a; }
+
+    select, input[type="text"] {
+      width: 100%;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid #bfc7c3;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: var(--accent);
+      outline: 3px solid rgba(40,87,72,.13);
+    }
+
+    .checkbox-line {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      font-size: .88rem;
+      color: #37444a;
+      cursor: pointer;
+    }
+
+    .checkbox-line input { width: 17px; height: 17px; margin-top: 2px; accent-color: var(--accent); }
+    .microcopy { margin: 6px 0 0; color: var(--muted); font-size: .78rem; }
+
+    .folder-box {
+      padding: 12px;
+      border: 1px solid #d8d1bd;
+      border-radius: 9px;
+      background: #fbf8ef;
+    }
+
+    .folder-name {
+      display: block;
+      margin: 8px 0 0;
+      overflow: hidden;
+      color: #594a27;
+      font-size: .82rem;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+      margin: 14px 0;
+    }
+
+    .metric {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #faf9f6;
+    }
+
+    .metric span { display: block; color: var(--muted); font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .metric strong { display: block; margin-top: 3px; font-size: 1.25rem; }
+
+    .progress-panel {
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid #cfd8d4;
+      border-radius: 10px;
+      background: #f7faf9;
+    }
+
+    .progress-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      position: relative;
+      overflow: hidden;
+      height: 11px;
+      border-radius: 99px;
+      background: #dce5e1;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), #4d8a74);
+      transition: width .18s ease;
+    }
+
+    .progress-bar.indeterminate {
+      width: 38% !important;
+      animation: indeterminate 1.2s ease-in-out infinite;
+    }
+
+    @keyframes indeterminate {
+      0% { transform: translateX(-110%); }
+      100% { transform: translateX(370%); }
+    }
+
+    .status-message {
+      min-height: 22px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .83rem;
+    }
+
+    .alert {
+      display: none;
+      margin: 12px 0 0;
+      padding: 11px 13px;
+      border: 1px solid;
+      border-radius: 9px;
+      font-size: .86rem;
+    }
+
+    .alert.show { display: block; }
+    .alert.error { border-color: #e4b4b4; background: var(--danger-bg); color: #7e2929; }
+    .alert.warning { border-color: #e7cf97; background: var(--warning-bg); color: #735015; }
+    .alert.success { border-color: #b6dbc5; background: var(--success-bg); color: #205e41; }
+    .alert.info { border-color: #b9d4ea; background: var(--info-bg); color: #244f76; }
+
+    .queue-card { margin-top: 14px; overflow: hidden; }
+    .table-wrap { overflow: auto; max-height: min(62vh, 680px); }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: .84rem;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #f3f2ee;
+      color: #4b555a;
+      font-size: .74rem;
+      letter-spacing: .035em;
+      text-align: left;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tbody td { padding: 11px 12px; border-bottom: 1px solid #ebe8e0; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr.is-current { background: #f2f8f5; }
+    .col-index { width: 48px; color: var(--muted); text-align: right; }
+    .col-size { width: 100px; white-space: nowrap; }
+    .col-status { width: 170px; }
+    .col-actions { width: 180px; }
+
+    .file-name {
+      display: block;
+      max-width: 440px;
+      overflow: hidden;
+      font-weight: 750;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .output-name {
+      display: block;
+      max-width: 440px;
+      overflow: hidden;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .76rem;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 99px;
+      background: #eceeed;
+      color: #4c5753;
+      font-size: .74rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge.waiting { background: #edf0ef; color: #4c5753; }
+    .badge.loading, .badge.converting, .badge.saving { background: var(--info-bg); color: var(--info); }
+    .badge.done { background: var(--success-bg); color: var(--success); }
+    .badge.error { background: var(--danger-bg); color: var(--danger); }
+    .badge.cancelled { background: var(--warning-bg); color: var(--warning); }
+
+    .mini-track { width: 100%; height: 4px; margin-top: 6px; overflow: hidden; border-radius: 9px; background: #dfe5e2; }
+    .mini-bar { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+    .action-group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .empty-state {
+      padding: 34px 18px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    details.log-panel { margin-top: 14px; }
+    details.log-panel summary { cursor: pointer; font-weight: 750; color: #46534e; }
+    #logOutput {
+      max-height: 240px;
+      overflow: auto;
+      margin: 10px 0 0;
+      padding: 12px;
+      border-radius: 8px;
+      background: #111820;
+      color: #dce7e2;
+      font: 12px/1.45 Consolas, Monaco, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .integrity-note {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--gold);
+      border-radius: 5px;
+      background: #fbf8ef;
+      color: #584c2c;
+      font-size: .84rem;
+    }
+
+    footer { padding: 20px 4px 0; color: var(--muted); font-size: .78rem; text-align: center; }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .side-stack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .side-stack .card:last-child { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 700px) {
+      .app-shell { width: min(100% - 14px, 1480px); margin-top: 7px; }
+      .masthead { padding: 20px 18px; border-radius: 12px 12px 8px 8px; }
+      .card-head { align-items: flex-start; flex-direction: column; }
+      .card-body { padding: 14px; }
+      .drop-zone { min-height: 190px; padding: 20px 14px; }
+      .side-stack { grid-template-columns: 1fr; }
+      .side-stack .card:last-child { grid-column: auto; }
+      .summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .button-row .btn { flex: 1 1 145px; }
+      .table-wrap { max-height: 65vh; }
+      .file-name, .output-name { max-width: 210px; }
+      .col-actions { min-width: 150px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="masthead">
+      <p class="eyebrow">Versão 2.0 • núcleo single-thread</p>
+      <h1>Conversor MP4 para AVI</h1>
+      <p>Adicione dezenas de vídeos de uma só vez, acompanhe a fila e salve os arquivos convertidos em uma pasta do computador.</p>
+    </header>
+
+    <div class="privacy-strip" role="note">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12v10H6V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div><strong>Privacidade:</strong> os vídeos são processados neste navegador e não são enviados para um servidor. Na primeira utilização, a página baixa o mecanismo FFmpeg necessário à conversão.</div>
+    </div>
+
+    <section class="layout">
+      <div>
+        <article class="card">
+          <div class="card-head">
+            <h2>1. Adicionar vídeos MP4</h2>
+            <button class="btn btn-ghost btn-small" id="addMoreButton" type="button">Adicionar mais</button>
+          </div>
+          <div class="card-body">
+            <label class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Selecionar arquivos MP4">
+              <input id="fileInput" type="file" accept="video/mp4,.mp4" multiple>
+              <span>
+                <span class="upload-icon" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v5h14v-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="drop-title">Arraste os MP4 para cá ou clique para selecionar</span>
+                <span class="drop-help">Aceita mais de 40 arquivos por lote. A conversão ocorre em fila para preservar a memória.</span>
+              </span>
+            </label>
+
+            <div id="alertBox" class="alert" role="alert" aria-live="polite"></div>
+
+            <div class="summary-grid" aria-label="Resumo da fila">
+              <div class="metric"><span>Total</span><strong id="metricTotal">0</strong></div>
+              <div class="metric"><span>Aguardando</span><strong id="metricWaiting">0</strong></div>
+              <div class="metric"><span>Concluídos</span><strong id="metricDone">0</strong></div>
+              <div class="metric"><span>Tamanho</span><strong id="metricSize">0 B</strong></div>
+            </div>
+
+            <div class="progress-panel">
+              <div class="progress-line">
+                <span id="progressTitle">Fila pronta</span>
+                <span id="progressPercent">0%</span>
+              </div>
+              <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+                <div class="progress-bar" id="globalProgress"></div>
+              </div>
+              <div class="status-message" id="statusMessage" aria-live="polite">Versão 2.0 pronta — este núcleo não requer SharedArrayBuffer.</div>
+            </div>
+
+            <div class="button-row">
+              <button class="btn btn-primary" id="startButton" type="button" disabled>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg>
+                Iniciar conversão
+              </button>
+              <button class="btn btn-secondary" id="pauseButton" type="button" disabled>Pausar após o atual</button>
+              <button class="btn btn-danger" id="cancelButton" type="button" disabled>Cancelar atual</button>
+              <button class="btn btn-ghost" id="downloadAllButton" type="button" disabled>Baixar concluídos</button>
+              <button class="btn btn-ghost" id="manifestButton" type="button" disabled>Baixar relatório CSV</button>
+              <button class="btn btn-ghost" id="clearButton" type="button" disabled>Limpar fila</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card queue-card">
+          <div class="card-head">
+            <h2>2. Fila de conversão</h2>
+            <span class="badge waiting" id="queueBadge">0 arquivos</span>
+          </div>
+          <div class="table-wrap" id="tableWrap">
+            <div class="empty-state" id="emptyState">Nenhum vídeo adicionado.</div>
+            <table id="queueTable" hidden>
+              <thead>
+                <tr>
+                  <th class="col-index">#</th>
+                  <th>Arquivo</th>
+                  <th class="col-size">Tamanho</th>
+                  <th class="col-status">Situação</th>
+                  <th class="col-actions">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="queueBody"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <details class="log-panel">
+          <summary>Detalhes técnicos da conversão</summary>
+          <pre id="logOutput">O registro técnico aparecerá aqui.</pre>
+        </details>
+
+        <div class="integrity-note">
+          <strong>Observação sobre evidências:</strong> o AVI é um arquivo derivado. Preserve o MP4 original sem alterações e utilize o cálculo SHA-256 quando precisar registrar a integridade do original e do convertido.
+        </div>
+      </div>
+
+      <aside class="side-stack">
+        <article class="card">
+          <div class="card-head"><h2>Configuração</h2></div>
+          <div class="card-body">
+            <div class="field">
+              <label for="qualitySelect">Qualidade do AVI</label>
+              <select id="qualitySelect">
+                <option value="3">Alta qualidade (arquivo maior)</option>
+                <option value="5" selected>Equilibrada</option>
+                <option value="8">Compacta (arquivo menor)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="resolutionSelect">Resolução</label>
+              <select id="resolutionSelect">
+                <option value="original" selected>Manter original</option>
+                <option value="1080">Limitar a 1080p</option>
+                <option value="720">Limitar a 720p</option>
+                <option value="480">Limitar a 480p</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="fpsSelect">Quadros por segundo</label>
+              <select id="fpsSelect">
+                <option value="original" selected>Manter original</option>
+                <option value="30">30 fps</option>
+                <option value="25">25 fps</option>
+                <option value="24">24 fps</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="audioSelect">Áudio</label>
+              <select id="audioSelect">
+                <option value="192" selected>MP3 — 192 kbps</option>
+                <option value="128">MP3 — 128 kbps</option>
+                <option value="none">Sem áudio</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="suffixInput">Sufixo do nome</label>
+              <input id="suffixInput" type="text" value="_convertido" maxlength="45" autocomplete="off">
+              <p class="microcopy">Ex.: video01_convertido.avi</p>
+            </div>
+
+            <label class="checkbox-line">
+              <input id="hashCheckbox" type="checkbox">
+              <span>Calcular SHA-256 do MP4 e do AVI <small>(aumenta o tempo de processamento)</small></span>
+            </label>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head"><h2>Pasta de saída</h2></div>
+          <div class="card-body">
+            <div class="folder-box">
+              <button class="btn btn-secondary" id="folderButton" type="button">Escolher pasta</button>
+              <span class="folder-name" id="folderName">Nenhuma pasta escolhida</span>
+              <p class="microcopy" id="folderHelp">Recomendado para lotes grandes: cada AVI será gravado e liberado da memória.</p>
+            </div>
+            <label class="checkbox-line" style="margin-top:12px">
+              <input id="autoDownloadCheckbox" type="checkbox">
+              <span>Baixar cada AVI automaticamente quando não houver pasta selecionada.</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head"><h2>Como funciona</h2></div>
+          <div class="card-body">
+            <ol style="margin:0;padding-left:20px;font-size:.87rem;color:#45514c">
+              <li>Selecione todos os arquivos MP4.</li>
+              <li>Escolha uma pasta de saída, se disponível.</li>
+              <li>Clique em “Iniciar conversão”.</li>
+              <li>Aguarde a fila terminar sem fechar esta página.</li>
+            </ol>
+            <p class="microcopy" style="margin-top:12px">Codec de vídeo: MPEG-4/Xvid. Contêiner: AVI. Em vídeos extensos, feche abas desnecessárias para disponibilizar memória.</p>
+          </div>
+        </article>
+      </aside>
+    </section>
+
+    <footer>Conversor MP4 → AVI em lote • v2.0 • Núcleo single-thread sem SharedArrayBuffer</footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const LIBRARY_SOURCES = [
+        "https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js",
+        "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"
+      ];
+      const CORE_SOURCES = [
+        "https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js",
+        "https://cdn.jsdelivr.net/npm/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js"
+      ];
+
+      const els = {
+        fileInput: document.getElementById("fileInput"),
+        dropZone: document.getElementById("dropZone"),
+        addMoreButton: document.getElementById("addMoreButton"),
+        alertBox: document.getElementById("alertBox"),
+        metricTotal: document.getElementById("metricTotal"),
+        metricWaiting: document.getElementById("metricWaiting"),
+        metricDone: document.getElementById("metricDone"),
+        metricSize: document.getElementById("metricSize"),
+        progressTitle: document.getElementById("progressTitle"),
+        progressPercent: document.getElementById("progressPercent"),
+        progressTrack: document.getElementById("progressTrack"),
+        globalProgress: document.getElementById("globalProgress"),
+        statusMessage: document.getElementById("statusMessage"),
+        startButton: document.getElementById("startButton"),
+        pauseButton: document.getElementById("pauseButton"),
+        cancelButton: document.getElementById("cancelButton"),
+        downloadAllButton: document.getElementById("downloadAllButton"),
+        manifestButton: document.getElementById("manifestButton"),
+        clearButton: document.getElementById("clearButton"),
+        emptyState: document.getElementById("emptyState"),
+        queueTable: document.getElementById("queueTable"),
+        queueBody: document.getElementById("queueBody"),
+        queueBadge: document.getElementById("queueBadge"),
+        logOutput: document.getElementById("logOutput"),
+        qualitySelect: document.getElementById("qualitySelect"),
+        resolutionSelect: document.getElementById("resolutionSelect"),
+        fpsSelect: document.getElementById("fpsSelect"),
+        audioSelect: document.getElementById("audioSelect"),
+        suffixInput: document.getElementById("suffixInput"),
+        hashCheckbox: document.getElementById("hashCheckbox"),
+        folderButton: document.getElementById("folderButton"),
+        folderName: document.getElementById("folderName"),
+        folderHelp: document.getElementById("folderHelp"),
+        autoDownloadCheckbox: document.getElementById("autoDownloadCheckbox")
+      };
+
+      const state = {
+        queue: [],
+        nextId: 1,
+        ffmpeg: null,
+        fetchFile: null,
+        engineLoaded: false,
+        processing: false,
+        pauseRequested: false,
+        cancelRequested: false,
+        currentItem: null,
+        currentRatio: 0,
+        outputDirectory: null,
+        logLines: [],
+        loadedScriptSource: null
+      };
+
+      const STATUS = {
+        waiting: ["Aguardando", "waiting"],
+        loading: ["Lendo MP4", "loading"],
+        converting: ["Convertendo", "converting"],
+        saving: ["Salvando", "saving"],
+        done: ["Concluído", "done"],
+        error: ["Falhou", "error"],
+        cancelled: ["Cancelado", "cancelled"]
+      };
+
+      const settingsElements = [
+        els.qualitySelect,
+        els.resolutionSelect,
+        els.fpsSelect,
+        els.audioSelect,
+        els.suffixInput,
+        els.hashCheckbox
+      ];
+
+      function formatBytes(bytes) {
+        if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
+        const units = ["B", "KB", "MB", "GB", "TB"];
+        const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+        const value = bytes / Math.pow(1024, index);
+        return `${value.toLocaleString("pt-BR", { maximumFractionDigits: index ? 2 : 0 })} ${units[index]}`;
+      }
+
+      function formatDuration(ms) {
+        if (!Number.isFinite(ms)) return "";
+        const totalSeconds = Math.max(0, Math.round(ms / 1000));
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        return hours
+          ? `${hours}h ${String(minutes).padStart(2, "0")}min ${String(seconds).padStart(2, "0")}s`
+          : `${minutes}min ${String(seconds).padStart(2, "0")}s`;
+      }
+
+      function safeBaseName(name) {
+        const withoutExt = name.replace(/\.mp4$/i, "");
+        const cleaned = withoutExt
+          .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "_")
+          .replace(/[. ]+$/g, "")
+          .trim();
+        return (cleaned || "video").slice(0, 150);
+      }
+
+      function normalizedSuffix() {
+        const raw = els.suffixInput.value
+          .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "_")
+          .replace(/[. ]+$/g, "")
+          .trim();
+        return raw.slice(0, 45);
+      }
+
+      function assignOutputNames() {
+        const used = new Map();
+        const suffix = normalizedSuffix();
+        for (const item of state.queue) {
+          if (item.status === "done") {
+            used.set(item.outputName.toLocaleLowerCase("pt-BR"), 1);
+            continue;
+          }
+          const stem = `${safeBaseName(item.file.name)}${suffix}`;
+          let candidate = `${stem}.avi`;
+          let number = 2;
+          while (used.has(candidate.toLocaleLowerCase("pt-BR"))) {
+            candidate = `${stem}_${number}.avi`;
+            number += 1;
+          }
+          used.set(candidate.toLocaleLowerCase("pt-BR"), 1);
+          item.outputName = candidate;
+        }
+      }
+
+      function showAlert(message, type = "info", timeout = 0) {
+        els.alertBox.textContent = message;
+        els.alertBox.className = `alert ${type} show`;
+        if (timeout) {
+          window.setTimeout(() => {
+            if (els.alertBox.textContent === message) els.alertBox.className = "alert";
+          }, timeout);
+        }
+      }
+
+      function clearAlert() {
+        els.alertBox.textContent = "";
+        els.alertBox.className = "alert";
+      }
+
+      function appendLog(message) {
+        const line = String(message || "").trim();
+        if (!line) return;
+        state.logLines.push(line);
+        if (state.logLines.length > 500) state.logLines.splice(0, state.logLines.length - 500);
+        els.logOutput.textContent = state.logLines.join("\n");
+        els.logOutput.scrollTop = els.logOutput.scrollHeight;
+      }
+
+      function setGlobalProgress(percent, title, message, indeterminate = false) {
+        const value = Math.max(0, Math.min(100, Number(percent) || 0));
+        els.globalProgress.classList.toggle("indeterminate", indeterminate);
+        els.globalProgress.style.width = `${value}%`;
+        els.progressPercent.textContent = indeterminate ? "…" : `${Math.round(value)}%`;
+        els.progressTitle.textContent = title;
+        els.statusMessage.textContent = message;
+        els.progressTrack.setAttribute("aria-valuenow", String(Math.round(value)));
+      }
+
+      function statusCounts() {
+        return state.queue.reduce((acc, item) => {
+          acc[item.status] = (acc[item.status] || 0) + 1;
+          return acc;
+        }, {});
+      }
+
+      function updateSummary() {
+        const counts = statusCounts();
+        const totalSize = state.queue.reduce((sum, item) => sum + item.file.size, 0);
+        const waiting = counts.waiting || 0;
+        const done = counts.done || 0;
+        const downloadable = state.queue.filter(item => item.status === "done" && item.outputUrl).length;
+        const reportable = state.queue.some(item => ["done", "error", "cancelled"].includes(item.status));
+
+        els.metricTotal.textContent = state.queue.length.toLocaleString("pt-BR");
+        els.metricWaiting.textContent = waiting.toLocaleString("pt-BR");
+        els.metricDone.textContent = done.toLocaleString("pt-BR");
+        els.metricSize.textContent = formatBytes(totalSize);
+        els.queueBadge.textContent = `${state.queue.length.toLocaleString("pt-BR")} ${state.queue.length === 1 ? "arquivo" : "arquivos"}`;
+
+        els.emptyState.hidden = state.queue.length > 0;
+        els.queueTable.hidden = state.queue.length === 0;
+        els.startButton.disabled = state.processing || !state.queue.some(item => item.status === "waiting");
+        els.pauseButton.disabled = !state.processing || state.pauseRequested;
+        els.cancelButton.disabled = !state.processing || !state.currentItem;
+        els.downloadAllButton.disabled = downloadable === 0 || state.processing;
+        els.manifestButton.disabled = !reportable || state.processing;
+        els.clearButton.disabled = state.queue.length === 0 || state.processing;
+        els.addMoreButton.disabled = state.processing;
+        els.fileInput.disabled = state.processing;
+        settingsElements.forEach(element => { element.disabled = state.processing; });
+
+        if (!state.processing) {
+          if (state.queue.some(item => item.status === "waiting")) {
+            els.startButton.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg> Iniciar conversão';
+          }
+        }
+      }
+
+      function createRow(item, index) {
+        const row = document.createElement("tr");
+        row.dataset.id = String(item.id);
+        row.innerHTML = `
+          <td class="col-index"></td>
+          <td>
+            <span class="file-name" title=""></span>
+            <span class="output-name" title=""></span>
+          </td>
+          <td class="col-size"></td>
+          <td class="col-status">
+            <span class="badge waiting"></span>
+            <div class="mini-track"><div class="mini-bar"></div></div>
+          </td>
+          <td class="col-actions"><div class="action-group"></div></td>`;
+        updateRowElement(row, item, index);
+        return row;
+      }
+
+      function updateRowElement(row, item, index = state.queue.indexOf(item)) {
+        if (!row) return;
+        const [statusText, statusClass] = STATUS[item.status] || STATUS.waiting;
+        row.classList.toggle("is-current", state.currentItem === item);
+        row.children[0].textContent = String(index + 1);
+
+        const nameEl = row.querySelector(".file-name");
+        const outputEl = row.querySelector(".output-name");
+        nameEl.textContent = item.file.name;
+        nameEl.title = item.file.name;
+        outputEl.textContent = item.error
+          ? item.error
+          : `${item.outputName || "Saída AVI"}${item.outputSize ? ` • ${formatBytes(item.outputSize)}` : ""}${item.elapsed ? ` • ${formatDuration(item.elapsed)}` : ""}`;
+        outputEl.title = item.error || item.outputName || "";
+        row.children[2].textContent = formatBytes(item.file.size);
+
+        const badge = row.querySelector(".badge");
+        const progressLabel = ["loading", "converting", "saving"].includes(item.status) ? ` ${Math.round(item.progress || 0)}%` : "";
+        badge.className = `badge ${statusClass}`;
+        badge.textContent = `${statusText}${progressLabel}`;
+        row.querySelector(".mini-bar").style.width = `${Math.max(0, Math.min(100, item.progress || 0))}%`;
+
+        const actions = row.querySelector(".action-group");
+        actions.replaceChildren();
+
+        if (item.outputUrl) {
+          actions.appendChild(makeRowButton("Baixar AVI", "download", item.id, "btn-secondary"));
+        } else if (item.status === "done" && item.savedToFolder) {
+          const saved = document.createElement("span");
+          saved.className = "badge done";
+          saved.textContent = "Na pasta";
+          actions.appendChild(saved);
+        }
+
+        if (["error", "cancelled"].includes(item.status) && !state.processing) {
+          actions.appendChild(makeRowButton("Tentar novamente", "retry", item.id, "btn-secondary"));
+        }
+
+        if (item.status !== "converting" && item.status !== "loading" && item.status !== "saving" && !state.processing) {
+          actions.appendChild(makeRowButton("Remover", "remove", item.id, "btn-ghost"));
+        }
+      }
+
+      function makeRowButton(label, action, id, styleClass) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `btn btn-small ${styleClass}`;
+        button.dataset.action = action;
+        button.dataset.id = String(id);
+        button.textContent = label;
+        return button;
+      }
+
+      function renderQueue() {
+        const fragment = document.createDocumentFragment();
+        state.queue.forEach((item, index) => fragment.appendChild(createRow(item, index)));
+        els.queueBody.replaceChildren(fragment);
+        updateSummary();
+      }
+
+      function updateItemRow(item) {
+        const row = els.queueBody.querySelector(`tr[data-id="${item.id}"]`);
+        updateRowElement(row, item);
+        updateSummary();
+      }
+
+      function isValidMp4(file) {
+        return file && file.size > 0 && (/\.mp4$/i.test(file.name) || file.type === "video/mp4");
+      }
+
+      function addFiles(fileList) {
+        if (state.processing) return;
+        clearAlert();
+        const incoming = Array.from(fileList || []);
+        if (!incoming.length) return;
+
+        const signatures = new Set(state.queue.map(item => `${item.file.name}|${item.file.size}|${item.file.lastModified}`));
+        let added = 0;
+        let invalid = 0;
+        let duplicates = 0;
+        let veryLarge = 0;
+
+        for (const file of incoming) {
+          if (!isValidMp4(file)) {
+            invalid += 1;
+            continue;
+          }
+          const signature = `${file.name}|${file.size}|${file.lastModified}`;
+          if (signatures.has(signature)) {
+            duplicates += 1;
+            continue;
+          }
+          signatures.add(signature);
+          if (file.size > 500 * 1024 * 1024) veryLarge += 1;
+          state.queue.push({
+            id: state.nextId++,
+            file,
+            status: "waiting",
+            progress: 0,
+            outputName: "",
+            outputSize: 0,
+            outputBlob: null,
+            outputUrl: null,
+            savedToFolder: false,
+            outputFolderName: "",
+            elapsed: 0,
+            inputHash: "",
+            outputHash: "",
+            error: "",
+            completedAt: ""
+          });
+          added += 1;
+        }
+
+        assignOutputNames();
+        renderQueue();
+        els.fileInput.value = "";
+
+        const notes = [];
+        if (added) notes.push(`${added.toLocaleString("pt-BR")} ${added === 1 ? "arquivo adicionado" : "arquivos adicionados"}`);
+        if (duplicates) notes.push(`${duplicates} duplicado(s) ignorado(s)`);
+        if (invalid) notes.push(`${invalid} arquivo(s) que não eram MP4 ignorado(s)`);
+
+        if (veryLarge) {
+          showAlert(`${notes.join("; ")}. Há ${veryLarge} vídeo(s) acima de 500 MB; escolha uma pasta de saída e feche outras abas para reduzir o risco de falta de memória.`, "warning");
+        } else if (added) {
+          showAlert(`${notes.join("; ")}. A fila processará um vídeo por vez.`, "success", 6500);
+        } else {
+          showAlert(notes.join("; ") || "Nenhum MP4 válido foi adicionado.", "warning", 6500);
+        }
+
+        setGlobalProgress(0, "Fila pronta", `${state.queue.length.toLocaleString("pt-BR")} arquivo(s) na fila.`);
+      }
+
+      function removeItem(id) {
+        const index = state.queue.findIndex(item => item.id === id);
+        if (index < 0 || state.processing) return;
+        const [item] = state.queue.splice(index, 1);
+        releaseOutput(item);
+        assignOutputNames();
+        renderQueue();
+        if (!state.queue.length) setGlobalProgress(0, "Fila pronta", "Adicione os vídeos para começar.");
+      }
+
+      function releaseOutput(item) {
+        if (item && item.outputUrl) URL.revokeObjectURL(item.outputUrl);
+        if (item) {
+          item.outputUrl = null;
+          item.outputBlob = null;
+        }
+      }
+
+      function triggerDownload(url, filename) {
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = filename;
+        anchor.style.display = "none";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+      }
+
+      function loadScript(source) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = source;
+          script.async = true;
+          script.crossOrigin = "anonymous";
+          script.onload = () => resolve(source);
+          script.onerror = () => {
+            script.remove();
+            reject(new Error(`Não foi possível carregar ${source}`));
+          };
+          document.head.appendChild(script);
+        });
+      }
+
+      async function ensureFfmpegLibrary() {
+        if (window.FFmpeg && typeof window.FFmpeg.createFFmpeg === "function") {
+          state.fetchFile = window.FFmpeg.fetchFile;
+          return;
+        }
+
+        let lastError = null;
+        for (const source of LIBRARY_SOURCES) {
+          try {
+            appendLog(`Carregando biblioteca: ${source}`);
+            await loadScript(source);
+            if (window.FFmpeg && typeof window.FFmpeg.createFFmpeg === "function") {
+              state.fetchFile = window.FFmpeg.fetchFile;
+              state.loadedScriptSource = source;
+              return;
+            }
+          } catch (error) {
+            lastError = error;
+            appendLog(`Falha na fonte: ${error.message}`);
+          }
+        }
+        throw lastError || new Error("Biblioteca FFmpeg indisponível.");
+      }
+
+      async function ensureEngine() {
+        if (state.engineLoaded && state.ffmpeg) return;
+        setGlobalProgress(0, "Preparando conversor", "Baixando e iniciando o mecanismo FFmpeg…", true);
+        await ensureFfmpegLibrary();
+
+        let lastError = null;
+        for (const corePath of CORE_SOURCES) {
+          let candidate = null;
+          try {
+            appendLog(`Iniciando mecanismo: ${corePath}`);
+            candidate = window.FFmpeg.createFFmpeg({
+              log: false,
+              corePath,
+              mainName: "main",
+              logger: ({ type, message }) => appendLog(`[${type}] ${message}`),
+              progress: ({ ratio }) => handleConversionProgress(ratio)
+            });
+            await candidate.load();
+            state.ffmpeg = candidate;
+            state.engineLoaded = true;
+            appendLog("Mecanismo FFmpeg pronto.");
+            els.globalProgress.classList.remove("indeterminate");
+            return;
+          } catch (error) {
+            lastError = error;
+            appendLog(`Falha ao iniciar esta fonte: ${error && error.message ? error.message : error}`);
+            try { if (candidate) candidate.exit(); } catch (_) {}
+          }
+        }
+        els.globalProgress.classList.remove("indeterminate");
+        throw lastError || new Error("Não foi possível iniciar o mecanismo FFmpeg.");
+      }
+
+      function handleConversionProgress(ratio) {
+        const item = state.currentItem;
+        if (!item || item.status !== "converting") return;
+        const safeRatio = Number.isFinite(ratio) ? Math.max(0, Math.min(1, ratio)) : 0;
+        item.progress = Math.max(item.progress || 0, Math.round(safeRatio * 100));
+        state.currentRatio = safeRatio;
+        updateItemRow(item);
+        updateOverallFromQueue();
+      }
+
+      function updateOverallFromQueue() {
+        const total = state.queue.length || 1;
+        const completed = state.queue.filter(item => ["done", "error", "cancelled"].includes(item.status)).length;
+        const activeFraction = state.currentItem && ["loading", "converting", "saving"].includes(state.currentItem.status)
+          ? (state.currentItem.progress || 0) / 100
+          : 0;
+        const percent = ((completed + activeFraction) / total) * 100;
+        const currentPosition = state.currentItem ? state.queue.indexOf(state.currentItem) + 1 : completed;
+        setGlobalProgress(
+          percent,
+          `Processando ${Math.min(currentPosition, total)} de ${total}`,
+          state.currentItem ? state.currentItem.file.name : "Preparando próximo arquivo…"
+        );
+      }
+
+      function buildCommand(inputName, outputName) {
+        const args = ["-y", "-i", inputName, "-map", "0:v:0", "-map", "0:a?"];
+        const maxHeight = els.resolutionSelect.value;
+        const filter = maxHeight === "original"
+          ? "scale=-2:trunc(ih/2)*2"
+          : `scale=-2:trunc(min(${maxHeight}\\,ih)/2)*2`;
+        args.push("-vf", filter);
+
+        if (els.fpsSelect.value !== "original") args.push("-r", els.fpsSelect.value);
+
+        args.push(
+          "-c:v", "mpeg4",
+          "-vtag", "XVID",
+          "-q:v", els.qualitySelect.value
+        );
+
+        if (els.audioSelect.value === "none") {
+          args.push("-an");
+        } else {
+          args.push(
+            "-c:a", "libmp3lame",
+            "-b:a", `${els.audioSelect.value}k`,
+            "-ac", "2",
+            "-ar", "44100"
+          );
+        }
+
+        args.push("-f", "avi", outputName);
+        return args;
+      }
+
+      async function sha256(data) {
+        if (!window.crypto || !window.crypto.subtle) {
+          throw new Error("O navegador não disponibilizou o cálculo SHA-256 neste contexto.");
+        }
+        const digest = await window.crypto.subtle.digest("SHA-256", data);
+        return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+      }
+
+      async function getUniqueFileHandle(directory, desiredName) {
+        const dot = desiredName.lastIndexOf(".");
+        const stem = dot > 0 ? desiredName.slice(0, dot) : desiredName;
+        const extension = dot > 0 ? desiredName.slice(dot) : "";
+        let candidate = desiredName;
+        let number = 2;
+
+        while (true) {
+          try {
+            await directory.getFileHandle(candidate, { create: false });
+            candidate = `${stem}_${number}${extension}`;
+            number += 1;
+          } catch (error) {
+            if (error && error.name === "NotFoundError") {
+              const handle = await directory.getFileHandle(candidate, { create: true });
+              return { handle, name: candidate };
+            }
+            throw error;
+          }
+        }
+      }
+
+      async function saveToSelectedFolder(item, blob) {
+        const { handle, name } = await getUniqueFileHandle(state.outputDirectory, item.outputName);
+        const writable = await handle.createWritable();
+        try {
+          await writable.write(blob);
+        } finally {
+          await writable.close();
+        }
+        item.outputName = name;
+        item.savedToFolder = true;
+        item.outputFolderName = state.outputDirectory.name;
+      }
+
+      function cleanupFs(inputName, outputName) {
+        if (!state.ffmpeg || !state.engineLoaded) return;
+        try { state.ffmpeg.FS("unlink", inputName); } catch (_) {}
+        try { state.ffmpeg.FS("unlink", outputName); } catch (_) {}
+      }
+
+      function friendlyError(error) {
+        const raw = error && error.message ? error.message : String(error || "Erro desconhecido");
+        if (/memory|out of bounds|abort\(/i.test(raw)) {
+          return "Memória insuficiente. Feche outras abas, reduza a resolução ou processe vídeos menores.";
+        }
+        if (/sharedarraybuffer/i.test(raw)) {
+          return "O navegador carregou o núcleo antigo de múltiplas threads. Atualize a página com Ctrl+F5 para usar a versão corrigida.";
+        }
+        if (/failed to fetch|network|load/i.test(raw)) {
+          return "Não foi possível carregar o mecanismo de conversão. Verifique a internet e tente novamente.";
+        }
+        if (/permission|notallowed/i.test(raw)) {
+          return "A permissão para gravar na pasta foi negada. Escolha outra pasta ou use os botões de download.";
+        }
+        return raw.slice(0, 240);
+      }
+
+      async function convertItem(item) {
+        const started = performance.now();
+        const inputName = `entrada_${item.id}.mp4`;
+        const outputName = `saida_${item.id}.avi`;
+        let inputData = null;
+        let outputData = null;
+
+        item.status = "loading";
+        item.progress = 1;
+        item.error = "";
+        item.savedToFolder = false;
+        item.outputFolderName = "";
+        item.inputHash = "";
+        item.outputHash = "";
+        state.currentItem = item;
+        state.currentRatio = 0;
+        updateItemRow(item);
+        updateOverallFromQueue();
+
+        try {
+          inputData = await state.fetchFile(item.file);
+          if (els.hashCheckbox.checked) {
+            setGlobalProgress(0, "Calculando integridade", `SHA-256 do original: ${item.file.name}`, true);
+            item.inputHash = await sha256(inputData);
+            els.globalProgress.classList.remove("indeterminate");
+          }
+
+          state.ffmpeg.FS("writeFile", inputName, inputData);
+          inputData = null;
+          item.status = "converting";
+          item.progress = 2;
+          updateItemRow(item);
+          appendLog(`\n=== ${item.file.name} → ${item.outputName} ===`);
+          const command = buildCommand(inputName, outputName);
+          appendLog(`ffmpeg ${command.join(" ")}`);
+          await state.ffmpeg.run(...command);
+
+          if (state.cancelRequested) throw new Error("Conversão cancelada pelo usuário.");
+
+          item.status = "saving";
+          item.progress = 99;
+          updateItemRow(item);
+          outputData = state.ffmpeg.FS("readFile", outputName);
+          const outputBytes = outputData.byteLength;
+
+          if (els.hashCheckbox.checked) {
+            setGlobalProgress(99, "Calculando integridade", `SHA-256 do convertido: ${item.outputName}`, true);
+            item.outputHash = await sha256(outputData);
+            els.globalProgress.classList.remove("indeterminate");
+          }
+
+          const blob = new Blob([outputData], { type: "video/x-msvideo" });
+          outputData = null;
+
+          if (state.outputDirectory) {
+            await saveToSelectedFolder(item, blob);
+            item.outputBlob = null;
+            item.outputUrl = null;
+          } else {
+            item.outputBlob = blob;
+            item.outputUrl = URL.createObjectURL(blob);
+            if (els.autoDownloadCheckbox.checked) triggerDownload(item.outputUrl, item.outputName);
+          }
+
+          item.outputSize = outputBytes;
+          item.elapsed = performance.now() - started;
+          item.completedAt = new Date().toISOString();
+          item.status = "done";
+          item.progress = 100;
+          appendLog(`Concluído: ${item.outputName} (${formatBytes(outputBytes)})`);
+        } catch (error) {
+          item.elapsed = performance.now() - started;
+          item.progress = 0;
+          if (state.cancelRequested) {
+            item.status = "cancelled";
+            item.error = "Conversão cancelada pelo usuário.";
+          } else {
+            item.status = "error";
+            item.error = friendlyError(error);
+          }
+          appendLog(`Erro em ${item.file.name}: ${item.error}`);
+
+          if (/memory|abort|worker|terminated/i.test(String(error && error.message ? error.message : error))) {
+            state.engineLoaded = false;
+            state.ffmpeg = null;
+            state.pauseRequested = true;
+          }
+        } finally {
+          cleanupFs(inputName, outputName);
+          inputData = null;
+          outputData = null;
+          updateItemRow(item);
+        }
+      }
+
+      async function startBatch() {
+        if (state.processing || !state.queue.some(item => item.status === "waiting")) return;
+        clearAlert();
+        state.processing = true;
+        state.pauseRequested = false;
+        state.cancelRequested = false;
+        updateSummary();
+
+        try {
+          await ensureEngine();
+        } catch (error) {
+          state.processing = false;
+          state.currentItem = null;
+          updateSummary();
+          setGlobalProgress(0, "Conversor indisponível", "Não foi possível iniciar o mecanismo.");
+          showAlert(`${friendlyError(error)} Verifique a conexão com a internet e atualize a página com Ctrl+F5 antes de tentar novamente.`, "error");
+          return;
+        }
+
+        for (const item of state.queue) {
+          if (state.pauseRequested || state.cancelRequested) break;
+          if (item.status !== "waiting") continue;
+          await convertItem(item);
+          state.currentItem = null;
+          updateSummary();
+          await new Promise(resolve => window.setTimeout(resolve, 0));
+        }
+
+        const wasCancelled = state.cancelRequested;
+        const wasPaused = state.pauseRequested && !wasCancelled;
+        state.processing = false;
+        state.currentItem = null;
+        state.cancelRequested = false;
+        state.pauseRequested = false;
+        els.globalProgress.classList.remove("indeterminate");
+        renderQueue();
+
+        const counts = statusCounts();
+        const done = counts.done || 0;
+        const failed = counts.error || 0;
+        const waiting = counts.waiting || 0;
+
+        if (wasCancelled) {
+          setGlobalProgress((done / Math.max(1, state.queue.length)) * 100, "Conversão interrompida", `${waiting} arquivo(s) permanecem na fila.`);
+          showAlert("O arquivo atual foi cancelado. Use “Tentar novamente” e depois reinicie a fila, se desejar.", "warning");
+        } else if (wasPaused) {
+          setGlobalProgress((done / Math.max(1, state.queue.length)) * 100, "Fila pausada", `${waiting} arquivo(s) aguardando. Clique em “Iniciar conversão” para continuar.`);
+          showAlert("Fila pausada após a conclusão do arquivo atual.", "info");
+        } else if (waiting === 0) {
+          setGlobalProgress(100, "Lote finalizado", `${done} concluído(s)${failed ? ` e ${failed} com falha` : ""}.`);
+          showAlert(failed ? `Lote finalizado com ${failed} falha(s). Os itens podem ser repetidos individualmente.` : `Lote finalizado: ${done} arquivo(s) convertido(s).`, failed ? "warning" : "success");
+        }
+      }
+
+      async function chooseFolder() {
+        if (typeof window.showDirectoryPicker !== "function") {
+          showAlert("Este navegador não permite escolher uma pasta diretamente. Use Chrome ou Edge atualizado, ou baixe os AVIs pelos botões.", "warning");
+          return;
+        }
+        try {
+          const directory = await window.showDirectoryPicker({ mode: "readwrite" });
+          state.outputDirectory = directory;
+          els.folderName.textContent = directory.name;
+          els.folderName.title = directory.name;
+          els.folderHelp.textContent = "Os próximos AVIs serão gravados nesta pasta e liberados da memória.";
+          els.autoDownloadCheckbox.checked = false;
+          showAlert(`Pasta “${directory.name}” selecionada para os arquivos AVI.`, "success", 5000);
+        } catch (error) {
+          if (!error || error.name !== "AbortError") showAlert(friendlyError(error), "error");
+        }
+      }
+
+      function retryItem(id) {
+        if (state.processing) return;
+        const item = state.queue.find(candidate => candidate.id === id);
+        if (!item || !["error", "cancelled"].includes(item.status)) return;
+        item.status = "waiting";
+        item.error = "";
+        item.progress = 0;
+        updateItemRow(item);
+        setGlobalProgress(0, "Fila pronta", "O arquivo foi recolocado na fila.");
+      }
+
+      function pauseBatch() {
+        if (!state.processing) return;
+        state.pauseRequested = true;
+        els.pauseButton.disabled = true;
+        els.statusMessage.textContent = "A fila será pausada assim que o arquivo atual terminar.";
+      }
+
+      function cancelCurrent() {
+        if (!state.processing || !state.currentItem) return;
+        state.cancelRequested = true;
+        state.pauseRequested = true;
+        els.cancelButton.disabled = true;
+        els.statusMessage.textContent = "Cancelando o arquivo atual…";
+        try {
+          if (state.ffmpeg) state.ffmpeg.exit();
+        } catch (_) {}
+        state.ffmpeg = null;
+        state.engineLoaded = false;
+      }
+
+      async function downloadAll() {
+        const items = state.queue.filter(item => item.status === "done" && item.outputUrl);
+        if (!items.length) return;
+        showAlert(`Iniciando ${items.length} download(s). O navegador poderá pedir autorização para múltiplos arquivos.`, "info", 8000);
+        for (const item of items) {
+          triggerDownload(item.outputUrl, item.outputName);
+          await new Promise(resolve => window.setTimeout(resolve, 350));
+        }
+      }
+
+      function csvCell(value) {
+        return `"${String(value ?? "").replace(/"/g, '""')}"`;
+      }
+
+      function downloadManifest() {
+        const headers = [
+          "Nº", "Arquivo original", "Bytes original", "Arquivo AVI", "Bytes AVI",
+          "Situação", "Destino", "SHA-256 original", "SHA-256 AVI", "Tempo de conversão",
+          "Concluído em", "Erro"
+        ];
+        const rows = state.queue.map((item, index) => [
+          index + 1,
+          item.file.name,
+          item.file.size,
+          item.outputName,
+          item.outputSize || "",
+          (STATUS[item.status] || STATUS.waiting)[0],
+          item.savedToFolder ? `Pasta: ${item.outputFolderName || "selecionada"}` : (item.outputUrl ? "Download no navegador" : ""),
+          item.inputHash,
+          item.outputHash,
+          item.elapsed ? formatDuration(item.elapsed) : "",
+          item.completedAt,
+          item.error
+        ]);
+        const csv = "\uFEFF" + [headers, ...rows].map(row => row.map(csvCell).join(";")).join("\r\n");
+        const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+        const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+        triggerDownload(url, `relatorio_conversao_${stamp}.csv`);
+        window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+      }
+
+      function clearQueue() {
+        if (state.processing || !state.queue.length) return;
+        const unsaved = state.queue.some(item => item.outputUrl);
+        if (unsaved && !window.confirm("Há arquivos AVI disponíveis apenas nesta página. Deseja limpar a fila e liberar esses resultados da memória?")) return;
+        state.queue.forEach(releaseOutput);
+        state.queue = [];
+        renderQueue();
+        clearAlert();
+        setGlobalProgress(0, "Fila pronta", "Adicione os vídeos para começar.");
+      }
+
+      els.fileInput.addEventListener("change", event => addFiles(event.target.files));
+      els.addMoreButton.addEventListener("click", () => els.fileInput.click());
+      els.dropZone.addEventListener("keydown", event => {
+        if ((event.key === "Enter" || event.key === " ") && !state.processing) {
+          event.preventDefault();
+          els.fileInput.click();
+        }
+      });
+
+      ["dragenter", "dragover"].forEach(type => {
+        els.dropZone.addEventListener(type, event => {
+          event.preventDefault();
+          if (!state.processing) els.dropZone.classList.add("is-dragging");
+        });
+      });
+
+      ["dragleave", "drop"].forEach(type => {
+        els.dropZone.addEventListener(type, event => {
+          event.preventDefault();
+          els.dropZone.classList.remove("is-dragging");
+        });
+      });
+
+      els.dropZone.addEventListener("drop", event => {
+        if (!state.processing) addFiles(event.dataTransfer.files);
+      });
+
+      els.queueBody.addEventListener("click", event => {
+        const button = event.target.closest("button[data-action]");
+        if (!button) return;
+        const id = Number(button.dataset.id);
+        const item = state.queue.find(candidate => candidate.id === id);
+        if (button.dataset.action === "remove") removeItem(id);
+        if (button.dataset.action === "retry") retryItem(id);
+        if (button.dataset.action === "download" && item && item.outputUrl) triggerDownload(item.outputUrl, item.outputName);
+      });
+
+      els.suffixInput.addEventListener("input", () => {
+        assignOutputNames();
+        renderQueue();
+      });
+      els.startButton.addEventListener("click", startBatch);
+      els.pauseButton.addEventListener("click", pauseBatch);
+      els.cancelButton.addEventListener("click", cancelCurrent);
+      els.downloadAllButton.addEventListener("click", downloadAll);
+      els.manifestButton.addEventListener("click", downloadManifest);
+      els.clearButton.addEventListener("click", clearQueue);
+      els.folderButton.addEventListener("click", chooseFolder);
+
+      window.addEventListener("beforeunload", event => {
+        if (!state.processing) return;
+        event.preventDefault();
+        event.returnValue = "";
+      });
+
+      if (typeof window.showDirectoryPicker !== "function") {
+        els.folderButton.textContent = "Pasta não suportada";
+        els.folderHelp.textContent = "Use Chrome ou Edge atualizado, ou baixe os resultados pelos botões.";
+      }
+
+      appendLog("Conversor v2.0 iniciado com @ffmpeg/core-st 0.11.1 e mainName=main.");
+      renderQueue();
+    })();
+  </script>
+</body>
+</html>
