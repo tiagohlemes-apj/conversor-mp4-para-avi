@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>Conversor MP4 para AVI em lote — v2.0</title>
+  <title>Conversor MP4 para AVI em lote — v3.0</title>
   <style>
     :root {
       --ink: #111820;
@@ -41,10 +41,7 @@
     button, input, select { font: inherit; }
     button { touch-action: manipulation; }
 
-    .app-shell {
-      width: min(1480px, calc(100% - 24px));
-      margin: 18px auto 36px;
-    }
+    .app-shell { width: min(1480px, calc(100% - 24px)); margin: 18px auto 36px; }
 
     .masthead {
       position: relative;
@@ -61,146 +58,61 @@
     .masthead::after {
       content: "";
       position: absolute;
-      width: 260px;
-      height: 260px;
-      right: -90px;
-      top: -120px;
+      width: 260px; height: 260px;
+      right: -90px; top: -120px;
       border: 1px solid rgba(197, 162, 83, .26);
       border-radius: 50%;
       box-shadow: 0 0 0 36px rgba(197, 162, 83, .07), 0 0 0 72px rgba(197, 162, 83, .04);
       pointer-events: none;
     }
 
-    .eyebrow {
-      margin: 0 0 5px;
-      color: #e5cf94;
-      font-size: .78rem;
-      font-weight: 800;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(1.55rem, 3vw, 2.35rem);
-      line-height: 1.15;
-      letter-spacing: -.025em;
-    }
-
-    .masthead p:last-child {
-      max-width: 780px;
-      margin: 10px 0 0;
-      color: rgba(255,255,255,.82);
-    }
+    .eyebrow { margin: 0 0 5px; color: #e5cf94; font-size: .8rem; font-weight: 700; }
+    h1 { margin: 0; font-size: clamp(1.55rem, 3vw, 2.35rem); line-height: 1.15; letter-spacing: -.025em; }
+    .masthead p:last-child { max-width: 780px; margin: 10px 0 0; color: rgba(255,255,255,.82); }
 
     .privacy-strip {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin: 12px 0;
-      padding: 12px 15px;
-      border: 1px solid #b9d4c9;
-      border-radius: 10px;
-      background: #eef8f4;
-      color: #244a3e;
-      font-size: .92rem;
+      display: flex; gap: 10px; align-items: flex-start;
+      margin: 12px 0; padding: 12px 15px;
+      border: 1px solid #b9d4c9; border-radius: 10px;
+      background: #eef8f4; color: #244a3e; font-size: .92rem;
     }
-
     .privacy-strip svg { flex: 0 0 auto; margin-top: 1px; }
 
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
-      gap: 14px;
-      align-items: start;
-    }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 14px; align-items: start; }
 
-    .card {
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      background: var(--card);
-      box-shadow: 0 6px 20px rgba(17, 24, 32, .055);
-    }
-
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .card-head h2 {
-      margin: 0;
-      font-size: 1.05rem;
-    }
-
+    .card { border: 1px solid var(--line); border-radius: 13px; background: var(--card); box-shadow: 0 6px 20px rgba(17, 24, 32, .055); }
+    .card-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .card-head h2 { margin: 0; font-size: 1.05rem; }
     .card-body { padding: 18px; }
 
     .drop-zone {
-      position: relative;
-      display: grid;
-      place-items: center;
-      min-height: 218px;
-      padding: 28px;
-      border: 2px dashed #94aea4;
-      border-radius: 13px;
+      position: relative; display: grid; place-items: center;
+      min-height: 218px; padding: 28px;
+      border: 2px dashed #94aea4; border-radius: 13px;
       background: linear-gradient(180deg, #fbfdfc, #f4f8f6);
-      text-align: center;
-      cursor: pointer;
-      transition: border-color .18s, background .18s, transform .18s;
+      text-align: center; cursor: pointer;
+      transition: border-color .18s, background .18s;
     }
-
-    .drop-zone:hover,
-    .drop-zone:focus-visible,
-    .drop-zone.is-dragging {
-      border-color: var(--accent);
-      background: #eef7f3;
-      outline: none;
-    }
-
-    .drop-zone.is-dragging { transform: scale(1.006); }
+    .drop-zone:hover, .drop-zone:focus-visible, .drop-zone.is-dragging { border-color: var(--accent); background: #eef7f3; outline: none; }
     .drop-zone input { display: none; }
 
     .upload-icon {
-      display: grid;
-      place-items: center;
-      width: 58px;
-      height: 58px;
-      margin: 0 auto 12px;
-      border-radius: 16px;
-      background: var(--accent);
-      color: #fff;
+      display: grid; place-items: center;
+      width: 58px; height: 58px; margin: 0 auto 12px;
+      border-radius: 16px; background: var(--accent); color: #fff;
       box-shadow: 0 8px 18px rgba(40, 87, 72, .25);
     }
-
     .drop-title { margin: 0; font-size: 1.08rem; font-weight: 800; }
     .drop-help { margin: 7px 0 0; color: var(--muted); font-size: .9rem; }
 
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-top: 14px;
-    }
+    .button-row { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; }
 
     .btn {
-      display: inline-flex;
-      min-height: 42px;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 9px 14px;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      background: #fff;
-      color: var(--text);
-      font-weight: 750;
-      cursor: pointer;
+      display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 8px;
+      padding: 9px 14px; border: 1px solid transparent; border-radius: 9px;
+      background: #fff; color: var(--text); font-weight: 750; cursor: pointer;
       transition: transform .12s, box-shadow .12s, background .12s;
     }
-
     .btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(17,24,32,.11); }
     .btn:focus-visible { outline: 3px solid rgba(40,87,72,.25); outline-offset: 2px; }
     .btn:disabled { opacity: .48; cursor: not-allowed; }
@@ -215,129 +127,36 @@
 
     .field { display: grid; gap: 6px; margin-bottom: 14px; }
     .field:last-child { margin-bottom: 0; }
-    .field label { font-size: .82rem; font-weight: 800; color: #36434a; }
+    .field label { font-size: .85rem; font-weight: 800; color: #36434a; }
 
     select, input[type="text"] {
-      width: 100%;
-      min-height: 42px;
-      padding: 8px 10px;
-      border: 1px solid #bfc7c3;
-      border-radius: 8px;
-      background: #fff;
-      color: var(--text);
+      width: 100%; min-height: 42px; padding: 8px 10px;
+      border: 1px solid #bfc7c3; border-radius: 8px; background: #fff; color: var(--text);
     }
+    select:focus, input[type="text"]:focus { border-color: var(--accent); outline: 3px solid rgba(40,87,72,.13); }
 
-    select:focus, input[type="text"]:focus {
-      border-color: var(--accent);
-      outline: 3px solid rgba(40,87,72,.13);
-    }
-
-    .checkbox-line {
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-      font-size: .88rem;
-      color: #37444a;
-      cursor: pointer;
-    }
-
+    .checkbox-line { display: flex; gap: 9px; align-items: flex-start; font-size: .88rem; color: #37444a; cursor: pointer; }
+    .checkbox-line + .checkbox-line { margin-top: 10px; }
     .checkbox-line input { width: 17px; height: 17px; margin-top: 2px; accent-color: var(--accent); }
-    .microcopy { margin: 6px 0 0; color: var(--muted); font-size: .78rem; }
+    .microcopy { margin: 6px 0 0; color: var(--muted); font-size: .79rem; }
 
-    .folder-box {
-      padding: 12px;
-      border: 1px solid #d8d1bd;
-      border-radius: 9px;
-      background: #fbf8ef;
-    }
+    .folder-box { padding: 12px; border: 1px solid #d8d1bd; border-radius: 9px; background: #fbf8ef; }
+    .folder-name { display: block; margin: 8px 0 0; overflow: hidden; color: #594a27; font-size: .82rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 
-    .folder-name {
-      display: block;
-      margin: 8px 0 0;
-      overflow: hidden;
-      color: #594a27;
-      font-size: .82rem;
-      font-weight: 700;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 9px;
-      margin: 14px 0;
-    }
-
-    .metric {
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      background: #faf9f6;
-    }
-
-    .metric span { display: block; color: var(--muted); font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+    .summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; margin: 14px 0; }
+    .metric { padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: #faf9f6; }
+    .metric span { display: block; color: var(--muted); font-size: .76rem; font-weight: 700; }
     .metric strong { display: block; margin-top: 3px; font-size: 1.25rem; }
 
-    .progress-panel {
-      margin: 14px 0;
-      padding: 14px;
-      border: 1px solid #cfd8d4;
-      border-radius: 10px;
-      background: #f7faf9;
-    }
+    .progress-panel { margin: 14px 0; padding: 14px; border: 1px solid #cfd8d4; border-radius: 10px; background: #f7faf9; }
+    .progress-line { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; font-size: .86rem; font-weight: 700; }
+    .progress-track { position: relative; overflow: hidden; height: 11px; border-radius: 99px; background: #dce5e1; }
+    .progress-bar { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--accent), #4d8a74); transition: width .18s ease; }
+    .progress-bar.indeterminate { width: 38% !important; animation: indeterminate 1.2s ease-in-out infinite; }
+    @keyframes indeterminate { 0% { transform: translateX(-110%); } 100% { transform: translateX(370%); } }
+    .status-message { min-height: 22px; margin-top: 8px; color: var(--muted); font-size: .83rem; }
 
-    .progress-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 7px;
-      font-size: .86rem;
-      font-weight: 700;
-    }
-
-    .progress-track {
-      position: relative;
-      overflow: hidden;
-      height: 11px;
-      border-radius: 99px;
-      background: #dce5e1;
-    }
-
-    .progress-bar {
-      width: 0;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), #4d8a74);
-      transition: width .18s ease;
-    }
-
-    .progress-bar.indeterminate {
-      width: 38% !important;
-      animation: indeterminate 1.2s ease-in-out infinite;
-    }
-
-    @keyframes indeterminate {
-      0% { transform: translateX(-110%); }
-      100% { transform: translateX(370%); }
-    }
-
-    .status-message {
-      min-height: 22px;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: .83rem;
-    }
-
-    .alert {
-      display: none;
-      margin: 12px 0 0;
-      padding: 11px 13px;
-      border: 1px solid;
-      border-radius: 9px;
-      font-size: .86rem;
-    }
-
+    .alert { display: none; margin: 12px 0 0; padding: 11px 13px; border: 1px solid; border-radius: 9px; font-size: .86rem; }
     .alert.show { display: block; }
     .alert.error { border-color: #e4b4b4; background: var(--danger-bg); color: #7e2929; }
     .alert.warning { border-color: #e7cf97; background: var(--warning-bg); color: #735015; }
@@ -347,71 +166,27 @@
     .queue-card { margin-top: 14px; overflow: hidden; }
     .table-wrap { overflow: auto; max-height: min(62vh, 680px); }
 
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      font-size: .84rem;
-    }
-
+    table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: .84rem; }
     thead th {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--line);
-      background: #f3f2ee;
-      color: #4b555a;
-      font-size: .74rem;
-      letter-spacing: .035em;
-      text-align: left;
-      text-transform: uppercase;
-      white-space: nowrap;
+      position: sticky; top: 0; z-index: 2; padding: 10px 12px;
+      border-bottom: 1px solid var(--line); background: #f3f2ee; color: #4b555a;
+      font-size: .78rem; text-align: left; white-space: nowrap;
     }
-
     tbody td { padding: 11px 12px; border-bottom: 1px solid #ebe8e0; vertical-align: middle; }
     tbody tr:last-child td { border-bottom: 0; }
     tbody tr.is-current { background: #f2f8f5; }
     .col-index { width: 48px; color: var(--muted); text-align: right; }
     .col-size { width: 100px; white-space: nowrap; }
-    .col-status { width: 170px; }
+    .col-status { width: 190px; }
     .col-actions { width: 180px; }
 
-    .file-name {
-      display: block;
-      max-width: 440px;
-      overflow: hidden;
-      font-weight: 750;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+    .file-name { display: block; max-width: 440px; overflow: hidden; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .output-name { display: block; max-width: 440px; overflow: hidden; margin-top: 2px; color: var(--muted); font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
 
-    .output-name {
-      display: block;
-      max-width: 440px;
-      overflow: hidden;
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: .76rem;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 8px;
-      border-radius: 99px;
-      background: #eceeed;
-      color: #4c5753;
-      font-size: .74rem;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 99px; background: #eceeed; color: #4c5753; font-size: .74rem; font-weight: 800; white-space: nowrap; }
     .badge.waiting { background: #edf0ef; color: #4c5753; }
-    .badge.loading, .badge.converting, .badge.saving { background: var(--info-bg); color: var(--info); }
+    .badge.preparing, .badge.converting, .badge.saving { background: var(--info-bg); color: var(--info); }
+    .badge.retrying { background: var(--warning-bg); color: var(--warning); }
     .badge.done { background: var(--success-bg); color: var(--success); }
     .badge.error { background: var(--danger-bg); color: var(--danger); }
     .badge.cancelled { background: var(--warning-bg); color: var(--warning); }
@@ -420,36 +195,20 @@
     .mini-bar { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
     .action-group { display: flex; flex-wrap: wrap; gap: 6px; }
 
-    .empty-state {
-      padding: 34px 18px;
-      color: var(--muted);
-      text-align: center;
-      font-size: .9rem;
-    }
+    .empty-state { padding: 34px 18px; color: var(--muted); text-align: center; font-size: .9rem; }
 
     details.log-panel { margin-top: 14px; }
     details.log-panel summary { cursor: pointer; font-weight: 750; color: #46534e; }
     #logOutput {
-      max-height: 240px;
-      overflow: auto;
-      margin: 10px 0 0;
-      padding: 12px;
-      border-radius: 8px;
-      background: #111820;
-      color: #dce7e2;
-      font: 12px/1.45 Consolas, Monaco, monospace;
-      white-space: pre-wrap;
-      word-break: break-word;
+      max-height: 260px; overflow: auto; margin: 10px 0 0; padding: 12px;
+      border-radius: 8px; background: #111820; color: #dce7e2;
+      font: 12px/1.45 Consolas, Monaco, monospace; white-space: pre-wrap; word-break: break-word;
     }
 
     .integrity-note {
-      margin: 14px 0 0;
-      padding: 12px 14px;
-      border-left: 4px solid var(--gold);
-      border-radius: 5px;
-      background: #fbf8ef;
-      color: #584c2c;
-      font-size: .84rem;
+      margin: 14px 0 0; padding: 12px 14px;
+      border-left: 4px solid var(--gold); border-radius: 5px;
+      background: #fbf8ef; color: #584c2c; font-size: .84rem;
     }
 
     footer { padding: 20px 4px 0; color: var(--muted); font-size: .78rem; text-align: center; }
@@ -458,6 +217,7 @@
       .layout { grid-template-columns: 1fr; }
       .side-stack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .side-stack .card:last-child { grid-column: 1 / -1; }
+      .summary-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     @media (max-width: 700px) {
@@ -470,29 +230,27 @@
       .side-stack .card:last-child { grid-column: auto; }
       .summary-grid { grid-template-columns: repeat(2, 1fr); }
       .button-row .btn { flex: 1 1 145px; }
-      .table-wrap { max-height: 65vh; }
       .file-name, .output-name { max-width: 210px; }
-      .col-actions { min-width: 150px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
     }
   </style>
 </head>
 <body>
   <main class="app-shell">
     <header class="masthead">
-      <p class="eyebrow">Versão 2.0 • núcleo single-thread</p>
+      <p class="eyebrow">Versão 3.0 — conversão isolada em segundo plano</p>
       <h1>Conversor MP4 para AVI</h1>
-      <p>Adicione dezenas de vídeos de uma só vez, acompanhe a fila e salve os arquivos convertidos em uma pasta do computador.</p>
+      <p>A fila roda sozinha do início ao fim: cada vídeo é convertido em um processo próprio e, se algum falhar ou travar, o conversor se reinicia e tenta de novo sem intervenção.</p>
     </header>
 
     <div class="privacy-strip" role="note">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12v10H6V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <div><strong>Privacidade:</strong> os vídeos são processados neste navegador e não são enviados para um servidor. Na primeira utilização, a página baixa o mecanismo FFmpeg necessário à conversão.</div>
+      <div><strong>Privacidade:</strong> os vídeos são processados neste navegador e não são enviados para servidor algum. Na primeira utilização a página baixa o mecanismo FFmpeg (cerca de 32 MB), que fica em cache.</div>
     </div>
 
     <section class="layout">
@@ -512,7 +270,7 @@
                   </svg>
                 </span>
                 <span class="drop-title">Arraste os MP4 para cá ou clique para selecionar</span>
-                <span class="drop-help">Aceita mais de 40 arquivos por lote. A conversão ocorre em fila para preservar a memória.</span>
+                <span class="drop-help">A fila começa sozinha assim que os arquivos entram e processa um vídeo por vez.</span>
               </span>
             </label>
 
@@ -522,6 +280,7 @@
               <div class="metric"><span>Total</span><strong id="metricTotal">0</strong></div>
               <div class="metric"><span>Aguardando</span><strong id="metricWaiting">0</strong></div>
               <div class="metric"><span>Concluídos</span><strong id="metricDone">0</strong></div>
+              <div class="metric"><span>Com falha</span><strong id="metricFailed">0</strong></div>
               <div class="metric"><span>Tamanho</span><strong id="metricSize">0 B</strong></div>
             </div>
 
@@ -533,16 +292,13 @@
               <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
                 <div class="progress-bar" id="globalProgress"></div>
               </div>
-              <div class="status-message" id="statusMessage" aria-live="polite">Versão 2.0 pronta — este núcleo não requer SharedArrayBuffer.</div>
+              <div class="status-message" id="statusMessage" aria-live="polite">Adicione os vídeos para começar.</div>
             </div>
 
             <div class="button-row">
-              <button class="btn btn-primary" id="startButton" type="button" disabled>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg>
-                Iniciar conversão
-              </button>
+              <button class="btn btn-primary" id="startButton" type="button" disabled>Iniciar conversão</button>
               <button class="btn btn-secondary" id="pauseButton" type="button" disabled>Pausar após o atual</button>
-              <button class="btn btn-danger" id="cancelButton" type="button" disabled>Cancelar atual</button>
+              <button class="btn btn-danger" id="skipButton" type="button" disabled>Pular arquivo atual</button>
               <button class="btn btn-ghost" id="downloadAllButton" type="button" disabled>Baixar concluídos</button>
               <button class="btn btn-ghost" id="manifestButton" type="button" disabled>Baixar relatório CSV</button>
               <button class="btn btn-ghost" id="clearButton" type="button" disabled>Limpar fila</button>
@@ -555,7 +311,7 @@
             <h2>2. Fila de conversão</h2>
             <span class="badge waiting" id="queueBadge">0 arquivos</span>
           </div>
-          <div class="table-wrap" id="tableWrap">
+          <div class="table-wrap">
             <div class="empty-state" id="emptyState">Nenhum vídeo adicionado.</div>
             <table id="queueTable" hidden>
               <thead>
@@ -573,16 +329,51 @@
         </article>
 
         <details class="log-panel">
-          <summary>Detalhes técnicos da conversão</summary>
+          <summary>Registro técnico da conversão</summary>
           <pre id="logOutput">O registro técnico aparecerá aqui.</pre>
         </details>
 
         <div class="integrity-note">
-          <strong>Observação sobre evidências:</strong> o AVI é um arquivo derivado. Preserve o MP4 original sem alterações e utilize o cálculo SHA-256 quando precisar registrar a integridade do original e do convertido.
+          <strong>Observação sobre evidências:</strong> o AVI é arquivo derivado. Preserve o MP4 original inalterado e utilize o cálculo SHA-256 quando precisar documentar a integridade do original e do convertido. O relatório CSV registra nomes, tamanhos, tempos, situação e as hashes de cada item do lote.
         </div>
       </div>
 
       <aside class="side-stack">
+        <article class="card">
+          <div class="card-head"><h2>Funcionamento automático</h2></div>
+          <div class="card-body">
+            <label class="checkbox-line">
+              <input id="autoStartCheckbox" type="checkbox" checked>
+              <span>Começar a converter assim que os arquivos forem adicionados.</span>
+            </label>
+            <label class="checkbox-line">
+              <input id="autoRecoverCheckbox" type="checkbox" checked>
+              <span>Repetir sozinho o arquivo que falhar, reduzindo a qualidade a cada tentativa.</span>
+            </label>
+
+            <div class="field" style="margin-top:14px">
+              <label for="attemptsSelect">Tentativas por arquivo</label>
+              <select id="attemptsSelect">
+                <option value="2">2 tentativas</option>
+                <option value="3" selected>3 tentativas</option>
+                <option value="4">4 tentativas</option>
+              </select>
+              <p class="microcopy">A 2ª tentativa limita a 720p, a 3ª a 480p e a 4ª remove o áudio.</p>
+            </div>
+
+            <div class="field">
+              <label for="watchdogSelect">Tempo sem resposta até reiniciar</label>
+              <select id="watchdogSelect">
+                <option value="90">90 segundos</option>
+                <option value="180" selected>3 minutos</option>
+                <option value="300">5 minutos</option>
+                <option value="600">10 minutos</option>
+              </select>
+              <p class="microcopy">Se o conversor parar de responder, o processo é encerrado e o arquivo volta para a fila.</p>
+            </div>
+          </div>
+        </article>
+
         <article class="card">
           <div class="card-head"><h2>Configuração</h2></div>
           <div class="card-body">
@@ -627,12 +418,12 @@
             <div class="field">
               <label for="suffixInput">Sufixo do nome</label>
               <input id="suffixInput" type="text" value="_convertido" maxlength="45" autocomplete="off">
-              <p class="microcopy">Ex.: video01_convertido.avi</p>
+              <p class="microcopy">Exemplo: video01_convertido.avi</p>
             </div>
 
             <label class="checkbox-line">
               <input id="hashCheckbox" type="checkbox">
-              <span>Calcular SHA-256 do MP4 e do AVI <small>(aumenta o tempo de processamento)</small></span>
+              <span>Calcular SHA-256 do MP4 e do AVI. Evite em vídeos acima de 300 MB, porque exige carregar o arquivo inteiro na memória.</span>
             </label>
           </div>
         </article>
@@ -643,117 +434,203 @@
             <div class="folder-box">
               <button class="btn btn-secondary" id="folderButton" type="button">Escolher pasta</button>
               <span class="folder-name" id="folderName">Nenhuma pasta escolhida</span>
-              <p class="microcopy" id="folderHelp">Recomendado para lotes grandes: cada AVI será gravado e liberado da memória.</p>
+              <p class="microcopy" id="folderHelp">Escolha uma pasta para lotes grandes: cada AVI é gravado em disco e liberado da memória imediatamente.</p>
             </div>
             <label class="checkbox-line" style="margin-top:12px">
-              <input id="autoDownloadCheckbox" type="checkbox">
-              <span>Baixar cada AVI automaticamente quando não houver pasta selecionada.</span>
+              <input id="autoDownloadCheckbox" type="checkbox" checked>
+              <span>Sem pasta escolhida, baixar cada AVI automaticamente ao concluir.</span>
             </label>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-head"><h2>Como funciona</h2></div>
-          <div class="card-body">
-            <ol style="margin:0;padding-left:20px;font-size:.87rem;color:#45514c">
-              <li>Selecione todos os arquivos MP4.</li>
-              <li>Escolha uma pasta de saída, se disponível.</li>
-              <li>Clique em “Iniciar conversão”.</li>
-              <li>Aguarde a fila terminar sem fechar esta página.</li>
-            </ol>
-            <p class="microcopy" style="margin-top:12px">Codec de vídeo: MPEG-4/Xvid. Contêiner: AVI. Em vídeos extensos, feche abas desnecessárias para disponibilizar memória.</p>
           </div>
         </article>
       </aside>
     </section>
 
-    <footer>Conversor MP4 → AVI em lote • v2.0 • Núcleo single-thread sem SharedArrayBuffer</footer>
+    <footer>Conversor MP4 → AVI em lote • v3.0 • FFmpeg 0.12 em Web Worker isolado, sem SharedArrayBuffer</footer>
   </main>
+
+  <!-- Código do processo isolado. O navegador não executa este bloco diretamente. -->
+  <script id="workerSource" type="text/js-worker">
+    (function () {
+      "use strict";
+      var core = null;
+
+      function post(message, transfer) {
+        self.postMessage(message, transfer || []);
+      }
+
+      function loadCore(coreURL) {
+        var base = coreURL.slice(0, coreURL.length - 3);
+        var meta = { wasmURL: base + ".wasm", workerURL: base + ".worker.js" };
+        importScripts(coreURL);
+        if (typeof self.createFFmpegCore !== "function") {
+          throw new Error("O arquivo do mecanismo carregou, mas nao expos a funcao esperada.");
+        }
+        return self.createFFmpegCore({
+          mainScriptUrlOrBlob: coreURL + "#" + btoa(JSON.stringify(meta))
+        }).then(function (instance) {
+          core = instance;
+          core.setLogger(function (entry) {
+            post({ type: "log", level: entry.type, message: String(entry.message || "") });
+          });
+          core.setProgress(function (data) {
+            post({ type: "progress", ratio: data.progress, time: data.time });
+          });
+          post({ type: "ready", coreURL: coreURL });
+        });
+      }
+
+      function init(sources, index) {
+        var position = index || 0;
+        if (position >= sources.length) {
+          return Promise.reject(new Error("Nenhuma origem do mecanismo FFmpeg respondeu."));
+        }
+        var coreURL = sources[position];
+        post({ type: "loading", coreURL: coreURL });
+        var attempt;
+        try {
+          attempt = loadCore(coreURL);
+        } catch (error) {
+          attempt = Promise.reject(error);
+        }
+        return attempt.catch(function (error) {
+          post({ type: "log", level: "stderr", message: "Falha em " + coreURL + ": " + error.message });
+          return init(sources, position + 1);
+        });
+      }
+
+      function mountInput(file) {
+        try {
+          try { core.FS.mkdir("/entrada"); } catch (ignored) {}
+          core.FS.mount(core.FS.filesystems.WORKERFS, { files: [file] }, "/entrada");
+          var path = "/entrada/" + file.name;
+          var stat = core.FS.stat(path);
+          if (!stat || !stat.size) { throw new Error("montagem vazia"); }
+          return path;
+        } catch (error) {
+          try { core.FS.unmount("/entrada"); } catch (ignored) {}
+          return null;
+        }
+      }
+
+      function convert(job) {
+        var input = job.useMount ? mountInput(job.file) : null;
+        var mounted = !!input;
+        var pending;
+
+        if (mounted) {
+          pending = Promise.resolve();
+        } else {
+          pending = job.file.arrayBuffer().then(function (buffer) {
+            core.FS.writeFile("entrada.mp4", new Uint8Array(buffer));
+            input = "entrada.mp4";
+          });
+        }
+
+        return pending.then(function () {
+          post({ type: "stage", mounted: mounted });
+          var args = job.args.map(function (value) {
+            if (value === "__IN__") { return input; }
+            if (value === "__OUT__") { return job.output; }
+            return value;
+          });
+          core.setTimeout(-1);
+          var code = core.exec.apply(null, args);
+
+          var size = 0;
+          try { size = core.FS.stat(job.output).size; } catch (error) { size = 0; }
+          if (size < 512) {
+            throw new Error("O FFmpeg encerrou sem gerar um AVI valido (codigo " + code + ").");
+          }
+
+          var data = core.FS.readFile(job.output);
+          try { core.FS.unlink(job.output); } catch (ignored) {}
+          if (!mounted) { try { core.FS.unlink("entrada.mp4"); } catch (ignored) {} }
+          post({ type: "done", code: code, mounted: mounted, data: data }, [data.buffer]);
+        });
+      }
+
+      self.onmessage = function (event) {
+        var message = event.data || {};
+        var task;
+        try {
+          if (message.type === "init") {
+            task = init(message.coreURLs, 0);
+          } else if (message.type === "convert") {
+            task = convert(message);
+          } else {
+            return;
+          }
+        } catch (error) {
+          post({ type: "error", message: String(error && error.message ? error.message : error) });
+          return;
+        }
+        if (task && task.catch) {
+          task.catch(function (error) {
+            post({ type: "error", message: String(error && error.message ? error.message : error) });
+          });
+        }
+      };
+    })();
+  </script>
 
   <script>
     (() => {
       "use strict";
 
-      const LIBRARY_SOURCES = [
-        "https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js",
-        "https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"
-      ];
       const CORE_SOURCES = [
-        "https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js",
-        "https://cdn.jsdelivr.net/npm/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js"
+        "https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js",
+        "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/ffmpeg-core.js",
+        "https://unpkg.com/@ffmpeg/core@0.12.9/dist/umd/ffmpeg-core.js",
+        "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.9/dist/umd/ffmpeg-core.js"
       ];
 
-      const els = {
-        fileInput: document.getElementById("fileInput"),
-        dropZone: document.getElementById("dropZone"),
-        addMoreButton: document.getElementById("addMoreButton"),
-        alertBox: document.getElementById("alertBox"),
-        metricTotal: document.getElementById("metricTotal"),
-        metricWaiting: document.getElementById("metricWaiting"),
-        metricDone: document.getElementById("metricDone"),
-        metricSize: document.getElementById("metricSize"),
-        progressTitle: document.getElementById("progressTitle"),
-        progressPercent: document.getElementById("progressPercent"),
-        progressTrack: document.getElementById("progressTrack"),
-        globalProgress: document.getElementById("globalProgress"),
-        statusMessage: document.getElementById("statusMessage"),
-        startButton: document.getElementById("startButton"),
-        pauseButton: document.getElementById("pauseButton"),
-        cancelButton: document.getElementById("cancelButton"),
-        downloadAllButton: document.getElementById("downloadAllButton"),
-        manifestButton: document.getElementById("manifestButton"),
-        clearButton: document.getElementById("clearButton"),
-        emptyState: document.getElementById("emptyState"),
-        queueTable: document.getElementById("queueTable"),
-        queueBody: document.getElementById("queueBody"),
-        queueBadge: document.getElementById("queueBadge"),
-        logOutput: document.getElementById("logOutput"),
-        qualitySelect: document.getElementById("qualitySelect"),
-        resolutionSelect: document.getElementById("resolutionSelect"),
-        fpsSelect: document.getElementById("fpsSelect"),
-        audioSelect: document.getElementById("audioSelect"),
-        suffixInput: document.getElementById("suffixInput"),
-        hashCheckbox: document.getElementById("hashCheckbox"),
-        folderButton: document.getElementById("folderButton"),
-        folderName: document.getElementById("folderName"),
-        folderHelp: document.getElementById("folderHelp"),
-        autoDownloadCheckbox: document.getElementById("autoDownloadCheckbox")
+      const STATUS = {
+        waiting: ["Aguardando", "waiting"],
+        preparing: ["Preparando", "preparing"],
+        converting: ["Convertendo", "converting"],
+        saving: ["Salvando", "saving"],
+        retrying: ["Repetindo", "retrying"],
+        done: ["Concluído", "done"],
+        error: ["Falhou", "error"],
+        cancelled: ["Pulado", "cancelled"]
       };
+
+      const els = {};
+      [
+        "fileInput", "dropZone", "addMoreButton", "alertBox", "metricTotal", "metricWaiting",
+        "metricDone", "metricFailed", "metricSize", "progressTitle", "progressPercent", "progressTrack",
+        "globalProgress", "statusMessage", "startButton", "pauseButton", "skipButton",
+        "downloadAllButton", "manifestButton", "clearButton", "emptyState", "queueTable", "queueBody",
+        "queueBadge", "logOutput", "qualitySelect", "resolutionSelect", "fpsSelect", "audioSelect",
+        "suffixInput", "hashCheckbox", "folderButton", "folderName", "folderHelp",
+        "autoDownloadCheckbox", "autoStartCheckbox", "autoRecoverCheckbox", "attemptsSelect",
+        "watchdogSelect", "workerSource"
+      ].forEach(id => { els[id] = document.getElementById(id); });
 
       const state = {
         queue: [],
         nextId: 1,
-        ffmpeg: null,
-        fetchFile: null,
-        engineLoaded: false,
         processing: false,
         pauseRequested: false,
-        cancelRequested: false,
+        skipRequested: false,
         currentItem: null,
-        currentRatio: 0,
+        activeWorker: null,
+        abortCurrent: null,
         outputDirectory: null,
+        coreURL: null,
+        workerURL: null,
         logLines: [],
-        loadedScriptSource: null
-      };
-
-      const STATUS = {
-        waiting: ["Aguardando", "waiting"],
-        loading: ["Lendo MP4", "loading"],
-        converting: ["Convertendo", "converting"],
-        saving: ["Salvando", "saving"],
-        done: ["Concluído", "done"],
-        error: ["Falhou", "error"],
-        cancelled: ["Cancelado", "cancelled"]
+        throughput: []
       };
 
       const settingsElements = [
-        els.qualitySelect,
-        els.resolutionSelect,
-        els.fpsSelect,
-        els.audioSelect,
-        els.suffixInput,
-        els.hashCheckbox
+        els.qualitySelect, els.resolutionSelect, els.fpsSelect,
+        els.audioSelect, els.suffixInput, els.hashCheckbox
       ];
+
+      /* ---------------------------------------------------------- utilidades */
+
+      const sleep = ms => new Promise(resolve => window.setTimeout(resolve, ms));
 
       function formatBytes(bytes) {
         if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
@@ -764,19 +641,19 @@
       }
 
       function formatDuration(ms) {
-        if (!Number.isFinite(ms)) return "";
-        const totalSeconds = Math.max(0, Math.round(ms / 1000));
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
+        if (!Number.isFinite(ms) || ms <= 0) return "";
+        const total = Math.round(ms / 1000);
+        const hours = Math.floor(total / 3600);
+        const minutes = Math.floor((total % 3600) / 60);
+        const seconds = total % 60;
         return hours
-          ? `${hours}h ${String(minutes).padStart(2, "0")}min ${String(seconds).padStart(2, "0")}s`
+          ? `${hours}h ${String(minutes).padStart(2, "0")}min`
           : `${minutes}min ${String(seconds).padStart(2, "0")}s`;
       }
 
       function safeBaseName(name) {
-        const withoutExt = name.replace(/\.mp4$/i, "");
-        const cleaned = withoutExt
+        const cleaned = name
+          .replace(/\.mp4$/i, "")
           .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "_")
           .replace(/[. ]+$/g, "")
           .trim();
@@ -784,18 +661,18 @@
       }
 
       function normalizedSuffix() {
-        const raw = els.suffixInput.value
+        return els.suffixInput.value
           .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "_")
           .replace(/[. ]+$/g, "")
-          .trim();
-        return raw.slice(0, 45);
+          .trim()
+          .slice(0, 45);
       }
 
       function assignOutputNames() {
         const used = new Map();
         const suffix = normalizedSuffix();
         for (const item of state.queue) {
-          if (item.status === "done") {
+          if (item.status === "done" && item.outputName) {
             used.set(item.outputName.toLocaleLowerCase("pt-BR"), 1);
             continue;
           }
@@ -830,7 +707,7 @@
         const line = String(message || "").trim();
         if (!line) return;
         state.logLines.push(line);
-        if (state.logLines.length > 500) state.logLines.splice(0, state.logLines.length - 500);
+        if (state.logLines.length > 600) state.logLines.splice(0, state.logLines.length - 600);
         els.logOutput.textContent = state.logLines.join("\n");
         els.logOutput.scrollTop = els.logOutput.scrollHeight;
       }
@@ -845,6 +722,8 @@
         els.progressTrack.setAttribute("aria-valuenow", String(Math.round(value)));
       }
 
+      /* ------------------------------------------------------------ interface */
+
       function statusCounts() {
         return state.queue.reduce((acc, item) => {
           acc[item.status] = (acc[item.status] || 0) + 1;
@@ -854,34 +733,82 @@
 
       function updateSummary() {
         const counts = statusCounts();
-        const totalSize = state.queue.reduce((sum, item) => sum + item.file.size, 0);
         const waiting = counts.waiting || 0;
         const done = counts.done || 0;
-        const downloadable = state.queue.filter(item => item.status === "done" && item.outputUrl).length;
+        const failed = (counts.error || 0) + (counts.cancelled || 0);
+        const totalSize = state.queue.reduce((sum, item) => sum + item.file.size, 0);
+        const downloadable = state.queue.filter(item => item.outputUrl).length;
         const reportable = state.queue.some(item => ["done", "error", "cancelled"].includes(item.status));
 
         els.metricTotal.textContent = state.queue.length.toLocaleString("pt-BR");
         els.metricWaiting.textContent = waiting.toLocaleString("pt-BR");
         els.metricDone.textContent = done.toLocaleString("pt-BR");
+        els.metricFailed.textContent = failed.toLocaleString("pt-BR");
         els.metricSize.textContent = formatBytes(totalSize);
         els.queueBadge.textContent = `${state.queue.length.toLocaleString("pt-BR")} ${state.queue.length === 1 ? "arquivo" : "arquivos"}`;
 
         els.emptyState.hidden = state.queue.length > 0;
         els.queueTable.hidden = state.queue.length === 0;
-        els.startButton.disabled = state.processing || !state.queue.some(item => item.status === "waiting");
-        els.pauseButton.disabled = !state.processing || state.pauseRequested;
-        els.cancelButton.disabled = !state.processing || !state.currentItem;
-        els.downloadAllButton.disabled = downloadable === 0 || state.processing;
-        els.manifestButton.disabled = !reportable || state.processing;
-        els.clearButton.disabled = state.queue.length === 0 || state.processing;
-        els.addMoreButton.disabled = state.processing;
-        els.fileInput.disabled = state.processing;
-        settingsElements.forEach(element => { element.disabled = state.processing; });
 
-        if (!state.processing) {
-          if (state.queue.some(item => item.status === "waiting")) {
-            els.startButton.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg> Iniciar conversão';
-          }
+        els.startButton.disabled = state.processing || waiting === 0;
+        els.pauseButton.disabled = !state.processing || state.pauseRequested;
+        els.skipButton.disabled = !state.processing || !state.currentItem;
+        els.downloadAllButton.disabled = downloadable === 0;
+        els.manifestButton.disabled = !reportable;
+        els.clearButton.disabled = state.queue.length === 0 || state.processing;
+        els.addMoreButton.disabled = false;
+        settingsElements.forEach(element => { element.disabled = state.processing; });
+      }
+
+      function makeRowButton(label, action, id, styleClass) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `btn btn-small ${styleClass}`;
+        button.dataset.action = action;
+        button.dataset.id = String(id);
+        button.textContent = label;
+        return button;
+      }
+
+      function updateRowElement(row, item, index = state.queue.indexOf(item)) {
+        if (!row) return;
+        const [statusText, statusClass] = STATUS[item.status] || STATUS.waiting;
+        row.classList.toggle("is-current", state.currentItem === item);
+        row.children[0].textContent = String(index + 1);
+
+        const nameEl = row.querySelector(".file-name");
+        const outputEl = row.querySelector(".output-name");
+        nameEl.textContent = item.file.name;
+        nameEl.title = item.file.name;
+
+        const details = [];
+        if (item.outputName) details.push(item.outputName);
+        if (item.outputSize) details.push(formatBytes(item.outputSize));
+        if (item.elapsed) details.push(formatDuration(item.elapsed));
+        if (item.savedToFolder) details.push("gravado na pasta");
+        outputEl.textContent = item.error || details.join(" • ");
+        outputEl.title = item.error || details.join(" • ");
+
+        row.children[2].textContent = formatBytes(item.file.size);
+
+        const badge = row.querySelector(".badge");
+        const showsProgress = ["preparing", "converting", "saving"].includes(item.status);
+        const attemptLabel = item.attempt > 1 ? ` ${item.attempt}ª` : "";
+        badge.className = `badge ${statusClass}`;
+        badge.textContent = `${statusText}${attemptLabel}${showsProgress ? ` ${Math.round(item.progress || 0)}%` : ""}`;
+        row.querySelector(".mini-bar").style.width = `${Math.max(0, Math.min(100, item.progress || 0))}%`;
+
+        const actions = row.querySelector(".action-group");
+        actions.replaceChildren();
+
+        if (item.outputUrl) {
+          actions.appendChild(makeRowButton("Baixar AVI", "download", item.id, "btn-secondary"));
+        }
+        if (["error", "cancelled"].includes(item.status)) {
+          actions.appendChild(makeRowButton("Repetir", "retry", item.id, "btn-secondary"));
+        }
+        if (!showsProgress && item.status !== "retrying" && !state.processing) {
+          actions.appendChild(makeRowButton("Remover", "remove", item.id, "btn-ghost"));
         }
       }
 
@@ -904,59 +831,6 @@
         return row;
       }
 
-      function updateRowElement(row, item, index = state.queue.indexOf(item)) {
-        if (!row) return;
-        const [statusText, statusClass] = STATUS[item.status] || STATUS.waiting;
-        row.classList.toggle("is-current", state.currentItem === item);
-        row.children[0].textContent = String(index + 1);
-
-        const nameEl = row.querySelector(".file-name");
-        const outputEl = row.querySelector(".output-name");
-        nameEl.textContent = item.file.name;
-        nameEl.title = item.file.name;
-        outputEl.textContent = item.error
-          ? item.error
-          : `${item.outputName || "Saída AVI"}${item.outputSize ? ` • ${formatBytes(item.outputSize)}` : ""}${item.elapsed ? ` • ${formatDuration(item.elapsed)}` : ""}`;
-        outputEl.title = item.error || item.outputName || "";
-        row.children[2].textContent = formatBytes(item.file.size);
-
-        const badge = row.querySelector(".badge");
-        const progressLabel = ["loading", "converting", "saving"].includes(item.status) ? ` ${Math.round(item.progress || 0)}%` : "";
-        badge.className = `badge ${statusClass}`;
-        badge.textContent = `${statusText}${progressLabel}`;
-        row.querySelector(".mini-bar").style.width = `${Math.max(0, Math.min(100, item.progress || 0))}%`;
-
-        const actions = row.querySelector(".action-group");
-        actions.replaceChildren();
-
-        if (item.outputUrl) {
-          actions.appendChild(makeRowButton("Baixar AVI", "download", item.id, "btn-secondary"));
-        } else if (item.status === "done" && item.savedToFolder) {
-          const saved = document.createElement("span");
-          saved.className = "badge done";
-          saved.textContent = "Na pasta";
-          actions.appendChild(saved);
-        }
-
-        if (["error", "cancelled"].includes(item.status) && !state.processing) {
-          actions.appendChild(makeRowButton("Tentar novamente", "retry", item.id, "btn-secondary"));
-        }
-
-        if (item.status !== "converting" && item.status !== "loading" && item.status !== "saving" && !state.processing) {
-          actions.appendChild(makeRowButton("Remover", "remove", item.id, "btn-ghost"));
-        }
-      }
-
-      function makeRowButton(label, action, id, styleClass) {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `btn btn-small ${styleClass}`;
-        button.dataset.action = action;
-        button.dataset.id = String(id);
-        button.textContent = label;
-        return button;
-      }
-
       function renderQueue() {
         const fragment = document.createDocumentFragment();
         state.queue.forEach((item, index) => fragment.appendChild(createRow(item, index)));
@@ -965,47 +839,65 @@
       }
 
       function updateItemRow(item) {
-        const row = els.queueBody.querySelector(`tr[data-id="${item.id}"]`);
-        updateRowElement(row, item);
+        updateRowElement(els.queueBody.querySelector(`tr[data-id="${item.id}"]`), item);
         updateSummary();
       }
+
+      function updateOverall() {
+        const total = state.queue.length || 1;
+        const finished = state.queue.filter(item => ["done", "error", "cancelled"].includes(item.status)).length;
+        const active = state.currentItem && ["preparing", "converting", "saving"].includes(state.currentItem.status)
+          ? (state.currentItem.progress || 0) / 100
+          : 0;
+        const percent = ((finished + active) / total) * 100;
+        const position = state.currentItem ? state.queue.indexOf(state.currentItem) + 1 : finished;
+        const remaining = estimateRemaining();
+        const suffix = remaining ? ` — restam aproximadamente ${remaining}` : "";
+        setGlobalProgress(
+          percent,
+          `Convertendo ${Math.min(position, total)} de ${total}`,
+          state.currentItem ? `${state.currentItem.file.name}${suffix}` : "Preparando o próximo arquivo…"
+        );
+      }
+
+      function estimateRemaining() {
+        if (!state.throughput.length) return "";
+        const average = state.throughput.reduce((a, b) => a + b, 0) / state.throughput.length;
+        if (!Number.isFinite(average) || average <= 0) return "";
+        const pending = state.queue
+          .filter(item => ["waiting", "preparing", "converting", "saving", "retrying"].includes(item.status))
+          .reduce((sum, item) => sum + item.file.size, 0);
+        return formatDuration((pending / average) * 1000);
+      }
+
+      /* ------------------------------------------------------------- fila */
 
       function isValidMp4(file) {
         return file && file.size > 0 && (/\.mp4$/i.test(file.name) || file.type === "video/mp4");
       }
 
       function addFiles(fileList) {
-        if (state.processing) return;
         clearAlert();
         const incoming = Array.from(fileList || []);
         if (!incoming.length) return;
 
         const signatures = new Set(state.queue.map(item => `${item.file.name}|${item.file.size}|${item.file.lastModified}`));
-        let added = 0;
-        let invalid = 0;
-        let duplicates = 0;
-        let veryLarge = 0;
+        let added = 0, invalid = 0, duplicates = 0, veryLarge = 0;
 
         for (const file of incoming) {
-          if (!isValidMp4(file)) {
-            invalid += 1;
-            continue;
-          }
+          if (!isValidMp4(file)) { invalid += 1; continue; }
           const signature = `${file.name}|${file.size}|${file.lastModified}`;
-          if (signatures.has(signature)) {
-            duplicates += 1;
-            continue;
-          }
+          if (signatures.has(signature)) { duplicates += 1; continue; }
           signatures.add(signature);
-          if (file.size > 500 * 1024 * 1024) veryLarge += 1;
+          if (file.size > 600 * 1024 * 1024) veryLarge += 1;
           state.queue.push({
             id: state.nextId++,
             file,
             status: "waiting",
             progress: 0,
+            attempt: 0,
             outputName: "",
             outputSize: 0,
-            outputBlob: null,
             outputUrl: null,
             savedToFolder: false,
             outputFolderName: "",
@@ -1013,7 +905,8 @@
             inputHash: "",
             outputHash: "",
             error: "",
-            completedAt: ""
+            completedAt: "",
+            tail: []
           });
           added += 1;
         }
@@ -1025,35 +918,46 @@
         const notes = [];
         if (added) notes.push(`${added.toLocaleString("pt-BR")} ${added === 1 ? "arquivo adicionado" : "arquivos adicionados"}`);
         if (duplicates) notes.push(`${duplicates} duplicado(s) ignorado(s)`);
-        if (invalid) notes.push(`${invalid} arquivo(s) que não eram MP4 ignorado(s)`);
+        if (invalid) notes.push(`${invalid} arquivo(s) fora do formato MP4 ignorado(s)`);
 
-        if (veryLarge) {
-          showAlert(`${notes.join("; ")}. Há ${veryLarge} vídeo(s) acima de 500 MB; escolha uma pasta de saída e feche outras abas para reduzir o risco de falta de memória.`, "warning");
+        if (veryLarge && !state.outputDirectory) {
+          showAlert(`${notes.join("; ")}. Há ${veryLarge} vídeo(s) acima de 600 MB: escolha uma pasta de saída para gravar direto em disco.`, "warning");
         } else if (added) {
-          showAlert(`${notes.join("; ")}. A fila processará um vídeo por vez.`, "success", 6500);
+          showAlert(notes.join("; ") + ".", "success", 6000);
         } else {
-          showAlert(notes.join("; ") || "Nenhum MP4 válido foi adicionado.", "warning", 6500);
+          showAlert(notes.join("; ") || "Nenhum MP4 válido foi adicionado.", "warning", 6000);
         }
 
-        setGlobalProgress(0, "Fila pronta", `${state.queue.length.toLocaleString("pt-BR")} arquivo(s) na fila.`);
+        if (!state.processing) {
+          setGlobalProgress(0, "Fila pronta", `${state.queue.length.toLocaleString("pt-BR")} arquivo(s) na fila.`);
+          if (els.autoStartCheckbox.checked && added) window.setTimeout(startQueue, 500);
+        }
+      }
+
+      function releaseOutput(item) {
+        if (item && item.outputUrl) URL.revokeObjectURL(item.outputUrl);
+        if (item) item.outputUrl = null;
       }
 
       function removeItem(id) {
         const index = state.queue.findIndex(item => item.id === id);
         if (index < 0 || state.processing) return;
-        const [item] = state.queue.splice(index, 1);
-        releaseOutput(item);
+        releaseOutput(state.queue[index]);
+        state.queue.splice(index, 1);
         assignOutputNames();
         renderQueue();
         if (!state.queue.length) setGlobalProgress(0, "Fila pronta", "Adicione os vídeos para começar.");
       }
 
-      function releaseOutput(item) {
-        if (item && item.outputUrl) URL.revokeObjectURL(item.outputUrl);
-        if (item) {
-          item.outputUrl = null;
-          item.outputBlob = null;
-        }
+      function retryItem(id) {
+        const item = state.queue.find(candidate => candidate.id === id);
+        if (!item || !["error", "cancelled"].includes(item.status)) return;
+        item.status = "waiting";
+        item.error = "";
+        item.progress = 0;
+        item.attempt = 0;
+        updateItemRow(item);
+        if (!state.processing) startQueue();
       }
 
       function triggerDownload(url, filename) {
@@ -1066,139 +970,210 @@
         anchor.remove();
       }
 
-      function loadScript(source) {
-        return new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = source;
-          script.async = true;
-          script.crossOrigin = "anonymous";
-          script.onload = () => resolve(source);
-          script.onerror = () => {
-            script.remove();
-            reject(new Error(`Não foi possível carregar ${source}`));
+      /* ------------------------------------------------- comando do ffmpeg */
+
+      function profileForAttempt(attempt) {
+        const quality = Number(els.qualitySelect.value);
+        const height = els.resolutionSelect.value === "original" ? 0 : Number(els.resolutionSelect.value);
+        const fps = els.fpsSelect.value === "original" ? 0 : Number(els.fpsSelect.value);
+        const audio = els.audioSelect.value === "none" ? 0 : Number(els.audioSelect.value);
+
+        if (attempt <= 1 || !els.autoRecoverCheckbox.checked) {
+          return { quality, height, fps, audio, label: "configuração escolhida" };
+        }
+        if (attempt === 2) {
+          return {
+            quality: Math.max(quality, 6),
+            height: height ? Math.min(height, 720) : 720,
+            fps,
+            audio: audio ? Math.min(audio, 128) : 0,
+            label: "720p, qualidade reduzida"
           };
-          document.head.appendChild(script);
-        });
-      }
-
-      async function ensureFfmpegLibrary() {
-        if (window.FFmpeg && typeof window.FFmpeg.createFFmpeg === "function") {
-          state.fetchFile = window.FFmpeg.fetchFile;
-          return;
         }
-
-        let lastError = null;
-        for (const source of LIBRARY_SOURCES) {
-          try {
-            appendLog(`Carregando biblioteca: ${source}`);
-            await loadScript(source);
-            if (window.FFmpeg && typeof window.FFmpeg.createFFmpeg === "function") {
-              state.fetchFile = window.FFmpeg.fetchFile;
-              state.loadedScriptSource = source;
-              return;
-            }
-          } catch (error) {
-            lastError = error;
-            appendLog(`Falha na fonte: ${error.message}`);
-          }
+        if (attempt === 3) {
+          return {
+            quality: Math.max(quality, 8),
+            height: height ? Math.min(height, 480) : 480,
+            fps: fps ? Math.min(fps, 25) : 25,
+            audio: audio ? 128 : 0,
+            label: "480p, 25 fps"
+          };
         }
-        throw lastError || new Error("Biblioteca FFmpeg indisponível.");
+        return { quality: 10, height: 360, fps: 24, audio: 0, label: "360p sem áudio" };
       }
 
-      async function ensureEngine() {
-        if (state.engineLoaded && state.ffmpeg) return;
-        setGlobalProgress(0, "Preparando conversor", "Baixando e iniciando o mecanismo FFmpeg…", true);
-        await ensureFfmpegLibrary();
-
-        let lastError = null;
-        for (const corePath of CORE_SOURCES) {
-          let candidate = null;
-          try {
-            appendLog(`Iniciando mecanismo: ${corePath}`);
-            candidate = window.FFmpeg.createFFmpeg({
-              log: false,
-              corePath,
-              mainName: "main",
-              logger: ({ type, message }) => appendLog(`[${type}] ${message}`),
-              progress: ({ ratio }) => handleConversionProgress(ratio)
-            });
-            await candidate.load();
-            state.ffmpeg = candidate;
-            state.engineLoaded = true;
-            appendLog("Mecanismo FFmpeg pronto.");
-            els.globalProgress.classList.remove("indeterminate");
-            return;
-          } catch (error) {
-            lastError = error;
-            appendLog(`Falha ao iniciar esta fonte: ${error && error.message ? error.message : error}`);
-            try { if (candidate) candidate.exit(); } catch (_) {}
-          }
-        }
-        els.globalProgress.classList.remove("indeterminate");
-        throw lastError || new Error("Não foi possível iniciar o mecanismo FFmpeg.");
-      }
-
-      function handleConversionProgress(ratio) {
-        const item = state.currentItem;
-        if (!item || item.status !== "converting") return;
-        const safeRatio = Number.isFinite(ratio) ? Math.max(0, Math.min(1, ratio)) : 0;
-        item.progress = Math.max(item.progress || 0, Math.round(safeRatio * 100));
-        state.currentRatio = safeRatio;
-        updateItemRow(item);
-        updateOverallFromQueue();
-      }
-
-      function updateOverallFromQueue() {
-        const total = state.queue.length || 1;
-        const completed = state.queue.filter(item => ["done", "error", "cancelled"].includes(item.status)).length;
-        const activeFraction = state.currentItem && ["loading", "converting", "saving"].includes(state.currentItem.status)
-          ? (state.currentItem.progress || 0) / 100
-          : 0;
-        const percent = ((completed + activeFraction) / total) * 100;
-        const currentPosition = state.currentItem ? state.queue.indexOf(state.currentItem) + 1 : completed;
-        setGlobalProgress(
-          percent,
-          `Processando ${Math.min(currentPosition, total)} de ${total}`,
-          state.currentItem ? state.currentItem.file.name : "Preparando próximo arquivo…"
-        );
-      }
-
-      function buildCommand(inputName, outputName) {
-        const args = ["-y", "-i", inputName, "-map", "0:v:0", "-map", "0:a?"];
-        const maxHeight = els.resolutionSelect.value;
-        const filter = maxHeight === "original"
-          ? "scale=-2:trunc(ih/2)*2"
-          : `scale=-2:trunc(min(${maxHeight}\\,ih)/2)*2`;
+      function buildArgs(profile) {
+        const args = ["-fflags", "+genpts", "-i", "__IN__", "-map", "0:v:0", "-map", "0:a:0?", "-sn", "-dn"];
+        const filter = profile.height
+          ? `scale=-2:trunc(min(${profile.height}\\,ih)/2)*2`
+          : "scale=trunc(iw/2)*2:trunc(ih/2)*2";
         args.push("-vf", filter);
-
-        if (els.fpsSelect.value !== "original") args.push("-r", els.fpsSelect.value);
-
-        args.push(
-          "-c:v", "mpeg4",
-          "-vtag", "XVID",
-          "-q:v", els.qualitySelect.value
-        );
-
-        if (els.audioSelect.value === "none") {
-          args.push("-an");
+        if (profile.fps) args.push("-r", String(profile.fps));
+        args.push("-c:v", "mpeg4", "-vtag", "XVID", "-q:v", String(profile.quality));
+        if (profile.audio) {
+          args.push("-c:a", "libmp3lame", "-b:a", `${profile.audio}k`, "-ac", "2", "-ar", "44100");
         } else {
-          args.push(
-            "-c:a", "libmp3lame",
-            "-b:a", `${els.audioSelect.value}k`,
-            "-ac", "2",
-            "-ar", "44100"
-          );
+          args.push("-an");
         }
-
-        args.push("-f", "avi", outputName);
+        args.push("-max_muxing_queue_size", "1024", "-f", "avi", "__OUT__");
         return args;
       }
 
-      async function sha256(data) {
-        if (!window.crypto || !window.crypto.subtle) {
-          throw new Error("O navegador não disponibilizou o cálculo SHA-256 neste contexto.");
-        }
-        const digest = await window.crypto.subtle.digest("SHA-256", data);
+      function friendlyError(raw) {
+        const message = String(raw || "");
+        if (/PARADO/.test(message)) return "O conversor parou de responder e foi reiniciado automaticamente.";
+        if (/memory|out of bounds|abort|allocat/i.test(message)) return "Memória insuficiente para este vídeo nesta qualidade.";
+        if (/Invalid data|moov atom|does not contain/i.test(message)) return "O MP4 parece corrompido ou incompleto.";
+        if (/No such file|Unable to find/i.test(message)) return "O arquivo de origem não pôde ser lido pelo conversor.";
+        if (/failed to fetch|network|load|importScripts/i.test(message)) return "Falha ao baixar o mecanismo de conversão. Verifique a conexão.";
+        if (/Permission|NotAllowed/i.test(message)) return "A gravação na pasta escolhida foi negada.";
+        return message.slice(0, 220);
+      }
+
+      /* ---------------------------------------------------------- conversão */
+
+      function parseClock(text) {
+        const parts = String(text).split(":");
+        if (parts.length !== 3) return 0;
+        return (Number(parts[0]) * 3600) + (Number(parts[1]) * 60) + Number(parts[2]);
+      }
+
+      function ensureWorkerURL() {
+        if (state.workerURL) return state.workerURL;
+        const blob = new Blob([els.workerSource.textContent], { type: "text/javascript" });
+        state.workerURL = URL.createObjectURL(blob);
+        return state.workerURL;
+      }
+
+      function convertOnce(item, profile, useMount) {
+        return new Promise((resolve, reject) => {
+          const started = performance.now();
+          let worker;
+          let settled = false;
+          let phase = "init";
+          let lastBeat = Date.now();
+          let duration = 0;
+
+          try {
+            worker = new Worker(ensureWorkerURL());
+          } catch (error) {
+            reject(new Error(`Não foi possível iniciar o processo de conversão: ${error.message}`));
+            return;
+          }
+
+          state.activeWorker = worker;
+
+          const timer = window.setInterval(() => {
+            const limit = phase === "init"
+              ? Math.max(Number(els.watchdogSelect.value) * 1000, 420000)
+              : Number(els.watchdogSelect.value) * 1000;
+            if (Date.now() - lastBeat > limit) finish(new Error("PARADO: sem resposta do conversor."));
+          }, 1000);
+
+          function cleanup() {
+            window.clearInterval(timer);
+            try { worker.terminate(); } catch (ignored) {}
+            if (state.activeWorker === worker) state.activeWorker = null;
+            if (state.abortCurrent === abort) state.abortCurrent = null;
+          }
+
+          function finish(error, value) {
+            if (settled) return;
+            settled = true;
+            cleanup();
+            if (error) reject(error); else resolve(value);
+          }
+
+          function abort(reason) { finish(new Error(reason)); }
+          state.abortCurrent = abort;
+
+          function setProgress(ratio) {
+            if (!Number.isFinite(ratio)) return;
+            const percent = Math.max(2, Math.min(99, Math.round(ratio * 100)));
+            if (percent > (item.progress || 0)) {
+              item.progress = percent;
+              updateItemRow(item);
+              updateOverall();
+            }
+          }
+
+          worker.onerror = event => finish(new Error(event.message || "Falha interna do processo de conversão."));
+
+          worker.onmessage = ({ data }) => {
+            lastBeat = Date.now();
+            if (!data) return;
+
+            if (data.type === "loading") {
+              setGlobalProgress(0, "Preparando o conversor", "Baixando o mecanismo FFmpeg (uma única vez, cerca de 32 MB)…", true);
+              appendLog(`Carregando o mecanismo de ${data.coreURL}`);
+              return;
+            }
+
+            if (data.type === "ready") {
+              phase = "convert";
+              state.coreURL = data.coreURL;
+              els.globalProgress.classList.remove("indeterminate");
+              item.status = "converting";
+              updateItemRow(item);
+              updateOverall();
+              worker.postMessage({
+                type: "convert",
+                file: new File([item.file], "entrada.mp4", { type: "video/mp4" }),
+                useMount,
+                args: buildArgs(profile),
+                output: "saida.avi"
+              });
+              return;
+            }
+
+            if (data.type === "stage") {
+              appendLog(data.mounted
+                ? "Origem lida diretamente do disco, sem cópia para a memória."
+                : "Origem copiada para a memória do conversor.");
+              return;
+            }
+
+            if (data.type === "log") {
+              const message = data.message;
+              item.tail.push(message);
+              if (item.tail.length > 40) item.tail.shift();
+              if (/Duration:\s*(\d+:\d+:\d+\.\d+)/.test(message)) {
+                duration = parseClock(RegExp.$1);
+              }
+              const timeMatch = /time=\s*(\d+:\d+:\d+\.\d+)/.exec(message);
+              if (timeMatch && duration > 0) {
+                logProgress = parseClock(timeMatch[1]) / duration;
+                setProgress(logProgress);
+              }
+              if (/error|invalid|failed/i.test(message)) appendLog(message);
+              return;
+            }
+
+            if (data.type === "progress") {
+              if (Number.isFinite(data.ratio) && data.ratio > 0) setProgress(data.ratio);
+              return;
+            }
+
+            if (data.type === "done") {
+              finish(null, { data: data.data, elapsed: performance.now() - started });
+              return;
+            }
+
+            if (data.type === "error") {
+              finish(new Error(data.message));
+            }
+          };
+
+          const sources = state.coreURL
+            ? [state.coreURL, ...CORE_SOURCES.filter(url => url !== state.coreURL)]
+            : CORE_SOURCES.slice();
+          worker.postMessage({ type: "init", coreURLs: sources });
+        });
+      }
+
+      async function sha256(buffer) {
+        if (!window.crypto || !window.crypto.subtle) throw new Error("SHA-256 indisponível neste contexto.");
+        const digest = await window.crypto.subtle.digest("SHA-256", buffer);
         return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
       }
 
@@ -1208,187 +1183,156 @@
         const extension = dot > 0 ? desiredName.slice(dot) : "";
         let candidate = desiredName;
         let number = 2;
-
-        while (true) {
+        for (;;) {
           try {
             await directory.getFileHandle(candidate, { create: false });
             candidate = `${stem}_${number}${extension}`;
             number += 1;
           } catch (error) {
             if (error && error.name === "NotFoundError") {
-              const handle = await directory.getFileHandle(candidate, { create: true });
-              return { handle, name: candidate };
+              return { handle: await directory.getFileHandle(candidate, { create: true }), name: candidate };
             }
             throw error;
           }
         }
       }
 
-      async function saveToSelectedFolder(item, blob) {
-        const { handle, name } = await getUniqueFileHandle(state.outputDirectory, item.outputName);
-        const writable = await handle.createWritable();
-        try {
-          await writable.write(blob);
-        } finally {
-          await writable.close();
-        }
-        item.outputName = name;
-        item.savedToFolder = true;
-        item.outputFolderName = state.outputDirectory.name;
-      }
-
-      function cleanupFs(inputName, outputName) {
-        if (!state.ffmpeg || !state.engineLoaded) return;
-        try { state.ffmpeg.FS("unlink", inputName); } catch (_) {}
-        try { state.ffmpeg.FS("unlink", outputName); } catch (_) {}
-      }
-
-      function friendlyError(error) {
-        const raw = error && error.message ? error.message : String(error || "Erro desconhecido");
-        if (/memory|out of bounds|abort\(/i.test(raw)) {
-          return "Memória insuficiente. Feche outras abas, reduza a resolução ou processe vídeos menores.";
-        }
-        if (/sharedarraybuffer/i.test(raw)) {
-          return "O navegador carregou o núcleo antigo de múltiplas threads. Atualize a página com Ctrl+F5 para usar a versão corrigida.";
-        }
-        if (/failed to fetch|network|load/i.test(raw)) {
-          return "Não foi possível carregar o mecanismo de conversão. Verifique a internet e tente novamente.";
-        }
-        if (/permission|notallowed/i.test(raw)) {
-          return "A permissão para gravar na pasta foi negada. Escolha outra pasta ou use os botões de download.";
-        }
-        return raw.slice(0, 240);
-      }
-
-      async function convertItem(item) {
-        const started = performance.now();
-        const inputName = `entrada_${item.id}.mp4`;
-        const outputName = `saida_${item.id}.avi`;
-        let inputData = null;
-        let outputData = null;
-
-        item.status = "loading";
-        item.progress = 1;
-        item.error = "";
-        item.savedToFolder = false;
-        item.outputFolderName = "";
-        item.inputHash = "";
-        item.outputHash = "";
-        state.currentItem = item;
-        state.currentRatio = 0;
+      async function deliver(item, payload) {
+        item.status = "saving";
+        item.progress = 99;
         updateItemRow(item);
-        updateOverallFromQueue();
 
-        try {
-          inputData = await state.fetchFile(item.file);
-          if (els.hashCheckbox.checked) {
-            setGlobalProgress(0, "Calculando integridade", `SHA-256 do original: ${item.file.name}`, true);
-            item.inputHash = await sha256(inputData);
-            els.globalProgress.classList.remove("indeterminate");
+        const bytes = payload.data;
+        item.outputSize = bytes.byteLength;
+
+        if (els.hashCheckbox.checked) {
+          try {
+            item.outputHash = await sha256(bytes.buffer.slice(0));
+          } catch (error) {
+            appendLog(`SHA-256 do AVI não calculado: ${error.message}`);
           }
-
-          state.ffmpeg.FS("writeFile", inputName, inputData);
-          inputData = null;
-          item.status = "converting";
-          item.progress = 2;
-          updateItemRow(item);
-          appendLog(`\n=== ${item.file.name} → ${item.outputName} ===`);
-          const command = buildCommand(inputName, outputName);
-          appendLog(`ffmpeg ${command.join(" ")}`);
-          await state.ffmpeg.run(...command);
-
-          if (state.cancelRequested) throw new Error("Conversão cancelada pelo usuário.");
-
-          item.status = "saving";
-          item.progress = 99;
-          updateItemRow(item);
-          outputData = state.ffmpeg.FS("readFile", outputName);
-          const outputBytes = outputData.byteLength;
-
-          if (els.hashCheckbox.checked) {
-            setGlobalProgress(99, "Calculando integridade", `SHA-256 do convertido: ${item.outputName}`, true);
-            item.outputHash = await sha256(outputData);
-            els.globalProgress.classList.remove("indeterminate");
-          }
-
-          const blob = new Blob([outputData], { type: "video/x-msvideo" });
-          outputData = null;
-
-          if (state.outputDirectory) {
-            await saveToSelectedFolder(item, blob);
-            item.outputBlob = null;
-            item.outputUrl = null;
-          } else {
-            item.outputBlob = blob;
-            item.outputUrl = URL.createObjectURL(blob);
-            if (els.autoDownloadCheckbox.checked) triggerDownload(item.outputUrl, item.outputName);
-          }
-
-          item.outputSize = outputBytes;
-          item.elapsed = performance.now() - started;
-          item.completedAt = new Date().toISOString();
-          item.status = "done";
-          item.progress = 100;
-          appendLog(`Concluído: ${item.outputName} (${formatBytes(outputBytes)})`);
-        } catch (error) {
-          item.elapsed = performance.now() - started;
-          item.progress = 0;
-          if (state.cancelRequested) {
-            item.status = "cancelled";
-            item.error = "Conversão cancelada pelo usuário.";
-          } else {
-            item.status = "error";
-            item.error = friendlyError(error);
-          }
-          appendLog(`Erro em ${item.file.name}: ${item.error}`);
-
-          if (/memory|abort|worker|terminated/i.test(String(error && error.message ? error.message : error))) {
-            state.engineLoaded = false;
-            state.ffmpeg = null;
-            state.pauseRequested = true;
-          }
-        } finally {
-          cleanupFs(inputName, outputName);
-          inputData = null;
-          outputData = null;
-          updateItemRow(item);
         }
+
+        const blob = new Blob([bytes], { type: "video/x-msvideo" });
+
+        if (state.outputDirectory) {
+          const { handle, name } = await getUniqueFileHandle(state.outputDirectory, item.outputName);
+          const writable = await handle.createWritable();
+          try { await writable.write(blob); } finally { await writable.close(); }
+          item.outputName = name;
+          item.savedToFolder = true;
+          item.outputFolderName = state.outputDirectory.name;
+          item.outputUrl = null;
+        } else {
+          item.outputUrl = URL.createObjectURL(blob);
+          if (els.autoDownloadCheckbox.checked) triggerDownload(item.outputUrl, item.outputName);
+        }
+
+        item.elapsed = payload.elapsed;
+        item.completedAt = new Date().toLocaleString("pt-BR");
+        item.status = "done";
+        item.progress = 100;
+        item.error = "";
+
+        if (payload.elapsed > 0) {
+          state.throughput.push(item.file.size / (payload.elapsed / 1000));
+          if (state.throughput.length > 8) state.throughput.shift();
+        }
+
+        appendLog(`Concluído: ${item.file.name} → ${item.outputName} (${formatBytes(item.outputSize)} em ${formatDuration(item.elapsed)})`);
+        updateItemRow(item);
       }
 
-      async function startBatch() {
-        if (state.processing || !state.queue.some(item => item.status === "waiting")) return;
-        clearAlert();
+      async function processItem(item) {
+        const maxAttempts = els.autoRecoverCheckbox.checked ? Number(els.attemptsSelect.value) : 1;
+        state.currentItem = item;
+
+        if (els.hashCheckbox.checked && !item.inputHash) {
+          try {
+            item.status = "preparing";
+            updateItemRow(item);
+            item.inputHash = await sha256(await item.file.arrayBuffer());
+          } catch (error) {
+            appendLog(`SHA-256 do original não calculado: ${error.message}`);
+          }
+        }
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+          if (state.skipRequested) break;
+          const profile = profileForAttempt(attempt);
+          item.attempt = attempt;
+          item.progress = 1;
+          item.status = "preparing";
+          item.error = "";
+          item.tail = [];
+          updateItemRow(item);
+          updateOverall();
+          appendLog(`\n=== ${item.file.name} — tentativa ${attempt} (${profile.label}) ===`);
+
+          try {
+            const useMount = item.file.size > 80 * 1024 * 1024 || attempt > 1;
+            const payload = await convertOnce(item, profile, useMount);
+            await deliver(item, payload);
+            state.currentItem = null;
+            return;
+          } catch (error) {
+            const raw = String(error && error.message ? error.message : error);
+            appendLog(`Falha na tentativa ${attempt}: ${raw}`);
+            if (item.tail.length) appendLog(item.tail.slice(-6).join("\n"));
+
+            if (state.skipRequested) break;
+
+            if (attempt < maxAttempts) {
+              item.status = "retrying";
+              item.error = `${friendlyError(raw)} Repetindo com qualidade menor…`;
+              item.progress = 0;
+              updateItemRow(item);
+              await sleep(1200);
+              continue;
+            }
+
+            item.status = "error";
+            item.error = friendlyError(raw);
+            item.progress = 0;
+            updateItemRow(item);
+            state.currentItem = null;
+            return;
+          }
+        }
+
+        if (state.skipRequested) {
+          item.status = "cancelled";
+          item.error = "Arquivo pulado pelo operador.";
+          item.progress = 0;
+          state.skipRequested = false;
+          updateItemRow(item);
+        }
+        state.currentItem = null;
+      }
+
+      async function startQueue() {
+        if (state.processing) return;
+        if (!state.queue.some(item => item.status === "waiting")) return;
+
         state.processing = true;
         state.pauseRequested = false;
-        state.cancelRequested = false;
+        state.skipRequested = false;
+        clearAlert();
         updateSummary();
 
-        try {
-          await ensureEngine();
-        } catch (error) {
-          state.processing = false;
-          state.currentItem = null;
+        for (;;) {
+          if (state.pauseRequested) break;
+          const next = state.queue.find(item => item.status === "waiting");
+          if (!next) break;
+          await processItem(next);
           updateSummary();
-          setGlobalProgress(0, "Conversor indisponível", "Não foi possível iniciar o mecanismo.");
-          showAlert(`${friendlyError(error)} Verifique a conexão com a internet e atualize a página com Ctrl+F5 antes de tentar novamente.`, "error");
-          return;
+          await sleep(200);
         }
 
-        for (const item of state.queue) {
-          if (state.pauseRequested || state.cancelRequested) break;
-          if (item.status !== "waiting") continue;
-          await convertItem(item);
-          state.currentItem = null;
-          updateSummary();
-          await new Promise(resolve => window.setTimeout(resolve, 0));
-        }
-
-        const wasCancelled = state.cancelRequested;
-        const wasPaused = state.pauseRequested && !wasCancelled;
+        const paused = state.pauseRequested;
         state.processing = false;
-        state.currentItem = null;
-        state.cancelRequested = false;
         state.pauseRequested = false;
+        state.currentItem = null;
         els.globalProgress.classList.remove("indeterminate");
         renderQueue();
 
@@ -1397,21 +1341,45 @@
         const failed = counts.error || 0;
         const waiting = counts.waiting || 0;
 
-        if (wasCancelled) {
-          setGlobalProgress((done / Math.max(1, state.queue.length)) * 100, "Conversão interrompida", `${waiting} arquivo(s) permanecem na fila.`);
-          showAlert("O arquivo atual foi cancelado. Use “Tentar novamente” e depois reinicie a fila, se desejar.", "warning");
-        } else if (wasPaused) {
-          setGlobalProgress((done / Math.max(1, state.queue.length)) * 100, "Fila pausada", `${waiting} arquivo(s) aguardando. Clique em “Iniciar conversão” para continuar.`);
-          showAlert("Fila pausada após a conclusão do arquivo atual.", "info");
-        } else if (waiting === 0) {
-          setGlobalProgress(100, "Lote finalizado", `${done} concluído(s)${failed ? ` e ${failed} com falha` : ""}.`);
-          showAlert(failed ? `Lote finalizado com ${failed} falha(s). Os itens podem ser repetidos individualmente.` : `Lote finalizado: ${done} arquivo(s) convertido(s).`, failed ? "warning" : "success");
+        if (paused) {
+          setGlobalProgress((done / Math.max(1, state.queue.length)) * 100, "Fila pausada", `${waiting} arquivo(s) aguardando.`);
+          showAlert("Fila pausada. Clique em “Iniciar conversão” para retomar de onde parou.", "info");
+        } else {
+          setGlobalProgress(100, "Lote finalizado", `${done} concluído(s)${failed ? `, ${failed} com falha` : ""}.`);
+          showAlert(
+            failed
+              ? `Lote finalizado: ${done} convertido(s) e ${failed} com falha após todas as tentativas. Consulte o registro técnico e o relatório CSV.`
+              : `Lote finalizado: ${done} arquivo(s) convertido(s).`,
+            failed ? "warning" : "success"
+          );
+        }
+      }
+
+      /* --------------------------------------------------------- comandos */
+
+      function pauseQueue() {
+        if (!state.processing) return;
+        state.pauseRequested = true;
+        els.pauseButton.disabled = true;
+        els.statusMessage.textContent = "A fila será pausada assim que o arquivo atual terminar.";
+      }
+
+      function skipCurrent() {
+        if (!state.processing || !state.currentItem) return;
+        state.skipRequested = true;
+        els.skipButton.disabled = true;
+        els.statusMessage.textContent = "Encerrando o arquivo atual…";
+        if (state.abortCurrent) {
+          state.abortCurrent("PULADO: arquivo interrompido pelo operador.");
+        } else if (state.activeWorker) {
+          try { state.activeWorker.terminate(); } catch (ignored) {}
+          state.activeWorker = null;
         }
       }
 
       async function chooseFolder() {
         if (typeof window.showDirectoryPicker !== "function") {
-          showAlert("Este navegador não permite escolher uma pasta diretamente. Use Chrome ou Edge atualizado, ou baixe os AVIs pelos botões.", "warning");
+          showAlert("Este navegador não permite escolher uma pasta. Use Chrome ou Edge atualizado, ou deixe o download automático ligado.", "warning");
           return;
         }
         try {
@@ -1423,48 +1391,17 @@
           els.autoDownloadCheckbox.checked = false;
           showAlert(`Pasta “${directory.name}” selecionada para os arquivos AVI.`, "success", 5000);
         } catch (error) {
-          if (!error || error.name !== "AbortError") showAlert(friendlyError(error), "error");
+          if (!error || error.name !== "AbortError") showAlert(friendlyError(error.message), "error");
         }
       }
 
-      function retryItem(id) {
-        if (state.processing) return;
-        const item = state.queue.find(candidate => candidate.id === id);
-        if (!item || !["error", "cancelled"].includes(item.status)) return;
-        item.status = "waiting";
-        item.error = "";
-        item.progress = 0;
-        updateItemRow(item);
-        setGlobalProgress(0, "Fila pronta", "O arquivo foi recolocado na fila.");
-      }
-
-      function pauseBatch() {
-        if (!state.processing) return;
-        state.pauseRequested = true;
-        els.pauseButton.disabled = true;
-        els.statusMessage.textContent = "A fila será pausada assim que o arquivo atual terminar.";
-      }
-
-      function cancelCurrent() {
-        if (!state.processing || !state.currentItem) return;
-        state.cancelRequested = true;
-        state.pauseRequested = true;
-        els.cancelButton.disabled = true;
-        els.statusMessage.textContent = "Cancelando o arquivo atual…";
-        try {
-          if (state.ffmpeg) state.ffmpeg.exit();
-        } catch (_) {}
-        state.ffmpeg = null;
-        state.engineLoaded = false;
-      }
-
       async function downloadAll() {
-        const items = state.queue.filter(item => item.status === "done" && item.outputUrl);
+        const items = state.queue.filter(item => item.outputUrl);
         if (!items.length) return;
         showAlert(`Iniciando ${items.length} download(s). O navegador poderá pedir autorização para múltiplos arquivos.`, "info", 8000);
         for (const item of items) {
           triggerDownload(item.outputUrl, item.outputName);
-          await new Promise(resolve => window.setTimeout(resolve, 350));
+          await sleep(350);
         }
       }
 
@@ -1474,9 +1411,8 @@
 
       function downloadManifest() {
         const headers = [
-          "Nº", "Arquivo original", "Bytes original", "Arquivo AVI", "Bytes AVI",
-          "Situação", "Destino", "SHA-256 original", "SHA-256 AVI", "Tempo de conversão",
-          "Concluído em", "Erro"
+          "Nº", "Arquivo original", "Bytes original", "Arquivo AVI", "Bytes AVI", "Situação",
+          "Tentativas", "Destino", "SHA-256 original", "SHA-256 AVI", "Tempo", "Concluído em", "Ocorrência"
         ];
         const rows = state.queue.map((item, index) => [
           index + 1,
@@ -1485,7 +1421,8 @@
           item.outputName,
           item.outputSize || "",
           (STATUS[item.status] || STATUS.waiting)[0],
-          item.savedToFolder ? `Pasta: ${item.outputFolderName || "selecionada"}` : (item.outputUrl ? "Download no navegador" : ""),
+          item.attempt || "",
+          item.savedToFolder ? `Pasta: ${item.outputFolderName}` : (item.outputUrl ? "Download no navegador" : ""),
           item.inputHash,
           item.outputHash,
           item.elapsed ? formatDuration(item.elapsed) : "",
@@ -1502,18 +1439,22 @@
       function clearQueue() {
         if (state.processing || !state.queue.length) return;
         const unsaved = state.queue.some(item => item.outputUrl);
-        if (unsaved && !window.confirm("Há arquivos AVI disponíveis apenas nesta página. Deseja limpar a fila e liberar esses resultados da memória?")) return;
+        if (unsaved && !window.confirm("Há arquivos AVI disponíveis apenas nesta página. Limpar a fila descarta esses resultados. Continuar?")) return;
         state.queue.forEach(releaseOutput);
         state.queue = [];
+        state.throughput = [];
         renderQueue();
         clearAlert();
         setGlobalProgress(0, "Fila pronta", "Adicione os vídeos para começar.");
       }
 
+      /* ------------------------------------------------------------ eventos */
+
       els.fileInput.addEventListener("change", event => addFiles(event.target.files));
       els.addMoreButton.addEventListener("click", () => els.fileInput.click());
+
       els.dropZone.addEventListener("keydown", event => {
-        if ((event.key === "Enter" || event.key === " ") && !state.processing) {
+        if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           els.fileInput.click();
         }
@@ -1522,7 +1463,7 @@
       ["dragenter", "dragover"].forEach(type => {
         els.dropZone.addEventListener(type, event => {
           event.preventDefault();
-          if (!state.processing) els.dropZone.classList.add("is-dragging");
+          els.dropZone.classList.add("is-dragging");
         });
       });
 
@@ -1533,9 +1474,7 @@
         });
       });
 
-      els.dropZone.addEventListener("drop", event => {
-        if (!state.processing) addFiles(event.dataTransfer.files);
-      });
+      els.dropZone.addEventListener("drop", event => addFiles(event.dataTransfer.files));
 
       els.queueBody.addEventListener("click", event => {
         const button = event.target.closest("button[data-action]");
@@ -1547,13 +1486,10 @@
         if (button.dataset.action === "download" && item && item.outputUrl) triggerDownload(item.outputUrl, item.outputName);
       });
 
-      els.suffixInput.addEventListener("input", () => {
-        assignOutputNames();
-        renderQueue();
-      });
-      els.startButton.addEventListener("click", startBatch);
-      els.pauseButton.addEventListener("click", pauseBatch);
-      els.cancelButton.addEventListener("click", cancelCurrent);
+      els.suffixInput.addEventListener("input", () => { assignOutputNames(); renderQueue(); });
+      els.startButton.addEventListener("click", startQueue);
+      els.pauseButton.addEventListener("click", pauseQueue);
+      els.skipButton.addEventListener("click", skipCurrent);
       els.downloadAllButton.addEventListener("click", downloadAll);
       els.manifestButton.addEventListener("click", downloadManifest);
       els.clearButton.addEventListener("click", clearQueue);
@@ -1567,10 +1503,10 @@
 
       if (typeof window.showDirectoryPicker !== "function") {
         els.folderButton.textContent = "Pasta não suportada";
-        els.folderHelp.textContent = "Use Chrome ou Edge atualizado, ou baixe os resultados pelos botões.";
+        els.folderHelp.textContent = "Use Chrome ou Edge atualizado para gravar direto em pasta. Sem isso, os AVIs são baixados pelo navegador.";
       }
 
-      appendLog("Conversor v2.0 iniciado com @ffmpeg/core-st 0.11.1 e mainName=main.");
+      appendLog("Conversor v3.0 iniciado. Cada vídeo é convertido em um processo isolado, com reinício automático em caso de falha.");
       renderQueue();
     })();
   </script>
